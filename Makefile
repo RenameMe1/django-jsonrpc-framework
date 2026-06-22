@@ -3,7 +3,7 @@ lint:
 
 test:
 	uv run pytest tests -s -vv
-	uv run pytest django_jsonrpc/openrpc/tests -vv -s
+	uv run pytest jsonrpc_framework/openrpc/tests -vv -s
 
 docs_:
 	uv run mkdocs serve -f docs/mkdocs.yml

@@ -9,8 +9,8 @@ from jsonrpc_framework.core.error import ParseError, InvalidRequestError, RpcErr
 type RequestType = Request | Notification
 type BatchType = list[Request | Notification | RpcError]
 
-class RequestValidator:
 
+class RequestValidator:
     def validate_body(self, body: bytes | Any) -> RequestType | BatchType | RpcError:
         try:
             json_body = json.loads(body)
@@ -25,20 +25,24 @@ class RequestValidator:
         elif isinstance(json_body, list):
             return self._validate_batch(json_body)
 
-        return InvalidRequestError(data=f"Invalid JSON-RPC request body {type(json_body)}, expected dict or list")
-
+        return InvalidRequestError(
+            data=f"Invalid JSON-RPC request body {type(json_body)}, expected dict or list"
+        )
 
     def _validate_batch(self, json_body: list[Any]) -> BatchType:
         batch: BatchType = []
 
         for item in json_body:
             if not isinstance(item, dict):
-                batch.append(InvalidRequestError(data=f"Invalid JSON-RPC request body {type(item)}, expected dict"))
+                batch.append(
+                    InvalidRequestError(
+                        data=f"Invalid JSON-RPC request body {type(item)}, expected dict"
+                    )
+                )
             else:
                 batch.append(self._validate_single(item))
 
         return batch
-            
 
     def _validate_single(self, json_body: dict[str, Any]) -> RequestType | RpcError:
 

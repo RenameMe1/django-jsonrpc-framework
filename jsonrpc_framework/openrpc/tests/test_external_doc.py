@@ -1,5 +1,7 @@
 from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
-from jsonrpc_framework.openrpc.document.external_docs._external_docs import _OpenRpcExternalDocTD
+from jsonrpc_framework.openrpc.document.external_docs._external_docs import (
+    _OpenRpcExternalDocTD,
+)
 
 
 def _test_openrpc_external_doc(
@@ -17,8 +19,11 @@ def test_openrpc_external_doc(
 ) -> None:
     _test_openrpc_external_doc(openrpc_external_doc, openrpc_external_doc_dict)
 
+
 def test_openrpc_external_doc_minimal(
     openrpc_external_doc_minimal: OpenRpcExternalDoc,
     openrpc_external_doc_minimal_dict: _OpenRpcExternalDocTD,
 ) -> None:
-    _test_openrpc_external_doc(openrpc_external_doc_minimal, openrpc_external_doc_minimal_dict)
+    _test_openrpc_external_doc(
+        openrpc_external_doc_minimal, openrpc_external_doc_minimal_dict
+    )

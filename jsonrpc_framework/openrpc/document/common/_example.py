@@ -7,6 +7,7 @@ __all__ = [
     "OpenRpcExampleObject",
 ]
 
+
 class _OpenRpcExampleObjectTD(TypedDict):
     summary: NotRequired[str]
     value: str
@@ -18,12 +19,10 @@ class OpenRpcExampleObject(OpenRPCModel):
     """The Example object is an object that defines an example that is
     intended to match the schema of a given Content Descriptor.
     """
+
     summary: Annotated[
         str | None,
-        Field(
-            default=None,
-            description=("Short description for the example..")
-        ),
+        Field(default=None, description=("Short description for the example..")),
     ] = None
     value: Annotated[
         str,
@@ -34,8 +33,8 @@ class OpenRpcExampleObject(OpenRPCModel):
                 "examples of media types that cannot naturally represented "
                 "in JSON, use a string value to contain the example, "
                 "escaping where necessary."
-        )
-        )
+            )
+        ),
     ]
     description: Annotated[
         str | None,

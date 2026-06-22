@@ -11,8 +11,8 @@ from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
 
 logger = logging.getLogger(__name__)
 
-class OpenRpcBuilder:
 
+class OpenRpcBuilder:
     document: OpenRpcDocument
 
     def __init__(
@@ -40,29 +40,25 @@ class OpenRpcBuilder:
         )
 
     def add_method(self, method: OpenRpcMethod) -> None:
-        """Add method entry to the document.
-        """
+        """Add method entry to the document."""
         self.document.methods.append(method)
-    
+
     def add_server(self, server: OpenRpcServer) -> None:
-        """Add server entry to the document.
-        """
+        """Add server entry to the document."""
         if self.document.servers is None:
             self.document.servers = []
 
         self.document.servers.append(server)
 
     def add_external_doc(self, external_doc: OpenRpcExternalDoc) -> None:
-        """Add external doc entry to the document.
-        """
+        """Add external doc entry to the document."""
         if self.document.external_docs is None:
             self.document.external_docs = external_doc
         else:
             ValueError("External doc already exists")
 
     def add_components(self, components: OpenRpcComponents) -> None:
-        """Add components entry to the document.
-        """
+        """Add components entry to the document."""
         if self.document.components is None:
             self.document.components = components
         else:

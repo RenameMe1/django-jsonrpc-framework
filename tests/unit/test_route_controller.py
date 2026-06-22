@@ -1,6 +1,7 @@
 import pytest
 from jsonrpc_framework.controller import RouteController, BaseController
 
+
 def test_route_controller() -> None:
     class TestController(BaseController):
         def method_other(self) -> str:
@@ -29,11 +30,12 @@ def test_route_controller_with_conflict() -> None:
         def method_other(self) -> str:
             return "other"
 
-    with pytest.raises(ValueError): 
+    with pytest.raises(ValueError):
         RouteController(
             path="jsonrpc",
             controllers=[TestController, TestController2],
         )
+
 
 def test_route_controller_with_invalid_controller() -> None:
     class InvalidController:

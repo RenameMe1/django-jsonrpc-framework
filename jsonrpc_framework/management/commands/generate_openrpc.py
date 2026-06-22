@@ -6,15 +6,16 @@ from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
 from typing import Any
 from argparse import ArgumentParser
 
+
 class Command(BaseCommand):
     help = "Generate OpenRPC JSON from a collector object"
+
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument(
             "--collector",
             required=True,
             help=(
-                "Dotted path to collector instance, "
-                'e.g. "myproject.openrpc.collector"'
+                'Dotted path to collector instance, e.g. "myproject.openrpc.collector"'
             ),
         )
         parser.add_argument(
@@ -22,6 +23,7 @@ class Command(BaseCommand):
             default=None,
             help='Output file path (default: DJANGO_JSONRPC_DOCS["FILE_PATH"] or ./openrpc.json)',
         )
+
     def handle(self, *args: tuple[Any], **options: dict[str, Any]) -> None:
         collector_path = str(options["collector"])
         try:

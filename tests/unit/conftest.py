@@ -10,9 +10,11 @@ from jsonrpc_framework.logic.responser import ResponseBuilder
 
 # Validators fixtures
 
+
 @pytest.fixture
 def validator() -> RequestValidator:
     return RequestValidator()
+
 
 @pytest.fixture
 def valid_bytes_request() -> bytes:
@@ -23,16 +25,19 @@ def valid_bytes_request() -> bytes:
 def valid_bytes_notification() -> bytes:
     return b'{"jsonrpc": "2.0", "method": "test", "params": [1, 2, 3]}'
 
+
 @pytest.fixture
 def invalid_bytes_request() -> bytes:
     return b'{"jsonrpc": "2.0", "params": [1, 2, 3], "id": "1"}'
+
 
 @pytest.fixture
 def valid_batch_contain_invalid_request(
     valid_bytes_request: bytes,
     invalid_bytes_request: bytes,
 ) -> bytes:
-    return b'[' + valid_bytes_request + b',' + invalid_bytes_request + b']'
+    return b"[" + valid_bytes_request + b"," + invalid_bytes_request + b"]"
+
 
 @pytest.fixture
 def unsupported_version_request() -> bytes:
@@ -46,14 +51,18 @@ def unsupported_version_request() -> bytes:
 def dispatcher() -> RpcDispatcher:
     return RpcDispatcher()
 
+
 async def async_method() -> str:
     return "Awaitable success"
+
 
 def sync_method() -> str:
     return "Success"
 
+
 def internal_handler_error() -> str:
     raise Exception("Internal handler error")
+
 
 @pytest.fixture
 def registry() -> dict[MethodType, Callable]:
@@ -64,6 +73,7 @@ def registry() -> dict[MethodType, Callable]:
         "internal_handler_error": internal_handler_error,
     }
 
+
 @pytest.fixture
 def valid_request() -> Request:
     return Request(
@@ -72,6 +82,7 @@ def valid_request() -> Request:
         id=1,
     )
 
+
 @pytest.fixture
 def invalid_method_request() -> Request:
     return Request(
@@ -79,6 +90,7 @@ def invalid_method_request() -> Request:
         method="invalid",
         id=1,
     )
+
 
 @pytest.fixture
 def invalid_params_request() -> Request:
@@ -89,6 +101,7 @@ def invalid_params_request() -> Request:
         id=1,
     )
 
+
 @pytest.fixture
 def async_method_request() -> Request:
     return Request(
@@ -96,6 +109,7 @@ def async_method_request() -> Request:
         method="async_method",
         id=1,
     )
+
 
 @pytest.fixture
 def sync_method_request() -> Request:
@@ -105,6 +119,7 @@ def sync_method_request() -> Request:
         id=1,
     )
 
+
 @pytest.fixture
 def internal_handler_error_request() -> Request:
     return Request(
@@ -113,6 +128,7 @@ def internal_handler_error_request() -> Request:
         id=1,
     )
 
+
 @pytest.fixture
 def notification_request() -> Notification:
     return Notification(
@@ -120,6 +136,7 @@ def notification_request() -> Notification:
         method="test",
         id=1,
     )
+
 
 @pytest.fixture
 def valid_requests_batch() -> list[Request | Notification]:
@@ -136,8 +153,11 @@ def valid_requests_batch() -> list[Request | Notification]:
         ),
     ]
 
+
 @pytest.fixture
-def valid_requests_batch_with_request_and_notification() -> list[Request | Notification]:
+def valid_requests_batch_with_request_and_notification() -> list[
+    Request | Notification
+]:
     return [
         Request(
             jsonrpc="2.0",
@@ -149,6 +169,7 @@ def valid_requests_batch_with_request_and_notification() -> list[Request | Notif
             method="test",
         ),
     ]
+
 
 @pytest.fixture
 def valid_batch_with_errors() -> list[Request | RpcError]:
@@ -165,7 +186,9 @@ def valid_batch_with_errors() -> list[Request | RpcError]:
         ),
     ]
 
+
 # Builder fixtures
+
 
 @pytest.fixture
 def response_builder() -> ResponseBuilder:

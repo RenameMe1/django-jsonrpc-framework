@@ -10,23 +10,19 @@ from django.views import View
 
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
 
-class OpenRpcJsonView(View):
 
+class OpenRpcJsonView(View):
     http_method_names = ["get"]
     path = "openrpc.json"
     collector: OpenRpcCollector = OpenRpcCollector()
 
-    def __init__(
-        self,
-        *args: tuple[Any],
-        **kwargs: dict[str, Any]
-    ):
+    def __init__(self, *args: tuple[Any], **kwargs: dict[str, Any]):
         super().__init__(*args, **kwargs)
 
-    def get(self, request: HttpRequest, *args: tuple[Any], **kwargs: dict[str, Any]) -> HttpResponse | FileResponse:
-        file_path = getattr(
-            settings, "DJANGO_JSONRPC_DOCS", {}
-            ).get("FILE_PATH", None)
+    def get(
+        self, request: HttpRequest, *args: tuple[Any], **kwargs: dict[str, Any]
+    ) -> HttpResponse | FileResponse:
+        file_path = getattr(settings, "DJANGO_JSONRPC_DOCS", {}).get("FILE_PATH", None)
 
         if file_path is not None and Path(file_path).exists():
             return FileResponse(
@@ -53,7 +49,6 @@ class OpenRpcJsonView(View):
         **initkwargs: Any,
     ) -> Callable[..., HttpResponseBase]:
         return super().as_view(collector=collector, **initkwargs)
-
 
 
 class OpenRpcDocView(TemplateView):

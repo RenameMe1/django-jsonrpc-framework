@@ -33,7 +33,7 @@ def test_valid_single_notification(
 def test_parse_error(
     validator: RequestValidator,
 ) -> None:
-    result = validator.validate_body(b'invalid json')
+    result = validator.validate_body(b"invalid json")
 
     assert isinstance(result, ParseError)
     assert result.code == -32700
@@ -43,7 +43,7 @@ def test_parse_error(
 def test_validate_empty_batch(
     validator: RequestValidator,
 ) -> None:
-    result = validator.validate_body(b'[]')
+    result = validator.validate_body(b"[]")
 
     assert isinstance(result, InvalidRequestError)
     assert result.code == -32600
@@ -61,6 +61,7 @@ def test_validate_batch(
     assert len(result) == 2
     assert isinstance(result[0], Request)
     assert isinstance(result[1], InvalidRequestError)
+
 
 def test_validate_wrong_version(
     validator: RequestValidator,

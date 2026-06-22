@@ -10,7 +10,6 @@ from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
 
 
 class OpenRpcDocument(OpenRPCModel):
-
     """This is the root object of the OpenRPC document. The contents of this
     object represent a whole OpenRPC document. How this object is constructed
     or stored is outside the scope of the OpenRPC Specification."""
@@ -20,13 +19,12 @@ class OpenRpcDocument(OpenRPCModel):
     @field_validator("*", mode="before")
     @classmethod
     def validate_x_fields(cls, v: Any, info: ValidationInfo) -> Any:
-        if info.field_name == '__pydantic_extra__':
+        if info.field_name == "__pydantic_extra__":
             if isinstance(v, dict):
                 for key in v.keys():
                     if not key.startswith("x-"):
                         raise ValueError(
-                            f"Invalid extra field: {key}, "
-                            "must start with 'x-'"
+                            f"Invalid extra field: {key}, must start with 'x-'"
                         )
 
         return v
@@ -39,14 +37,14 @@ class OpenRpcDocument(OpenRPCModel):
         The openrpc field SHOULD be used by tooling specifications and clients
         to interpret the OpenRPC document. This is not related to the API
         info.version string.
-        """
+        """,
     ] = OPENRPC_VERSION
     info: Annotated[
         OpenRpcInfo,
         """REQUIRED. The object provides metadata about the API. The metadata
         MAY be used by the clients if needed, and MAY be presented in editing
         or documentation generation tools for convenience.
-        """
+        """,
     ]
     servers: Annotated[
         list[OpenRpcServer] | None,
@@ -67,5 +65,5 @@ class OpenRpcDocument(OpenRPCModel):
             default=None,
         ),
         """Optional. Additional external documentation.
-        """
+        """,
     ] = None

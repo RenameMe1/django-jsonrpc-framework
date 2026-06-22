@@ -17,6 +17,7 @@ class JsonClient(Client):
 
         return super().post(path, *args, **kwargs)
 
+
 def _configure_django_if_needed() -> None:
     if settings.configured:
         return
@@ -28,6 +29,7 @@ def _configure_django_if_needed() -> None:
         INSTALLED_APPS=["django_jsonrpc"],
     )
     django.setup()
+
 
 @pytest.fixture
 def client() -> Client:

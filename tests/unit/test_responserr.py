@@ -6,6 +6,7 @@ from jsonrpc_framework.core.models import ErrorResponse
 
 settings.configure()
 
+
 def test_build_none_response(response_builder: ResponseBuilder) -> None:
     response = response_builder.build_response(None)
 
@@ -19,13 +20,18 @@ def test_success_response(response_builder: ResponseBuilder) -> None:
     assert response.status_code == 200
     assert response.content == b'{"jsonrpc": "2.0", "result": 1, "id": 1}'
 
+
 def test_error_response(response_builder: ResponseBuilder) -> None:
     response = response_builder.build_response(
         ErrorResponse(id="1", error=MethodNotFoundError(data="test"))
     )
 
     assert response.status_code == 200
-    assert response.content == b'{"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found", "data": "test"}, "id": "1"}'
+    assert (
+        response.content
+        == b'{"jsonrpc": "2.0", "error": {"code": -32601, "message": "Method not found", "data": "test"}, "id": "1"}'
+    )
+
 
 def test_batch_response(response_builder: ResponseBuilder) -> None:
     response = response_builder.build_response(
@@ -36,9 +42,12 @@ def test_batch_response(response_builder: ResponseBuilder) -> None:
     )
 
     assert response.status_code == 200
-    assert response.content == (
-        '[{"jsonrpc": "2.0", "result": 1, "id": 1}, '
-        '{"jsonrpc": "2.0", "error": '
-        '{"code": -32601, "message": "Method not found", "data": "test"}, '
-        '"id": "2"}]'
-    ).encode()
+    assert (
+        response.content
+        == (
+            '[{"jsonrpc": "2.0", "result": 1, "id": 1}, '
+            '{"jsonrpc": "2.0", "error": '
+            '{"code": -32601, "message": "Method not found", "data": "test"}, '
+            '"id": "2"}]'
+        ).encode()
+    )

@@ -6,7 +6,12 @@ from ._error import OpenRpcErrorObject
 from ._descriptor import OpenRcpContentDescriptorObject
 from ._tag import OpenRpcTag
 from ._reference import OpenRpcReferenceObject
-from ._schema import OpenRpcSchema, OpenRpcRefSchema, OpenRpcDataSchema, OpenRcpTypeSchema
+from ._schema import (
+    OpenRpcSchema,
+    OpenRpcRefSchema,
+    OpenRpcDataSchema,
+    OpenRcpTypeSchema,
+)
 from ._utils import validate_type_name
 
 __all__ = [

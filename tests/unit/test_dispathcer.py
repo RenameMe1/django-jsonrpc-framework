@@ -1,12 +1,18 @@
 import pytest
 
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
-from jsonrpc_framework.core.models import MethodType, SuccessResponse, ErrorResponse, RpcError
+from jsonrpc_framework.core.models import (
+    MethodType,
+    SuccessResponse,
+    ErrorResponse,
+    RpcError,
+)
 from collections.abc import Callable
 from jsonrpc_framework.core.models import Request, Notification
 
 
 pytestmark = pytest.mark.asyncio
+
 
 async def test_method_finding(
     dispatcher: RpcDispatcher,
@@ -113,7 +119,9 @@ async def test_valid_batch_with_request_and_notification(
     registry: dict[MethodType, Callable],
     valid_requests_batch_with_request_and_notification: list[Request | Notification],
 ) -> None:
-    result = await dispatcher.dispatch(valid_requests_batch_with_request_and_notification, registry)
+    result = await dispatcher.dispatch(
+        valid_requests_batch_with_request_and_notification, registry
+    )
 
     assert isinstance(result, list)
     assert len(result) == 1
@@ -131,7 +139,7 @@ async def test_batch_with_errors(
 
     assert isinstance(result, list)
     assert len(result) == len(valid_batch_with_errors)
-    
+
     assert isinstance(result[0], SuccessResponse)
     assert result[0].id == valid_batch_with_errors[0].id
 

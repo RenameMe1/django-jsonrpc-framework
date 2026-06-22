@@ -22,5 +22,5 @@ class OpenRpcReferenceObject(OpenRPCModel):
         str,
         Field(serialization_alias="$ref"),
         """REQUIRED. The reference string..
-        """
+        """,
     ]

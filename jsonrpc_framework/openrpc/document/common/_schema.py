@@ -8,30 +8,32 @@ __all__ = [
     "OpenRpcRefSchema",
 ]
 
+
 def validate_type(v: Any) -> str:
     if isinstance(v, str):
-        return 'string'
+        return "string"
     elif isinstance(v, int):
-        return 'integer'
+        return "integer"
     elif isinstance(v, float):
-        return 'number'
+        return "number"
     elif isinstance(v, bool):
-        return 'boolean'
+        return "boolean"
     elif isinstance(v, list):
-        return 'array'
+        return "array"
     elif isinstance(v, dict):
-        return 'object'
+        return "object"
     elif isinstance(v, type):
-        return 'object'
+        return "object"
     elif is_typeddict(v):
-        return 'object'
+        return "object"
     else:
         raise ValueError(f"Invalid type: {type(v)}")
+
 
 _OpenRpcSchemaTD = TypedDict(
     "_OpenRpcSchemaTD",
     {
-        "type": Literal['string', 'integer', 'number', 'boolean', 'array', 'object'],
+        "type": Literal["string", "integer", "number", "boolean", "array", "object"],
         "required": list[str] | None,
         "properties": dict[str, dict[str, str]] | None,
         "$ref": str | None,
@@ -45,11 +47,13 @@ class OpenRpcDataSchema(OpenRPCModel):
     required: list[str] | None = None
     properties: dict[str, dict[str, str]] | None = None
 
+
 class OpenRpcRefSchema(OpenRPCModel):
     ref: Annotated[str, Field(serialization_alias="$ref")]
 
+
 class OpenRcpTypeSchema(OpenRPCModel):
-    type: Literal['string', 'integer', 'number', 'boolean', 'array', 'object']
+    type: Literal["string", "integer", "number", "boolean", "array", "object"]
 
 
 type OpenRpcSchema = OpenRpcDataSchema | OpenRpcRefSchema | OpenRcpTypeSchema

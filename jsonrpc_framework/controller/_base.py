@@ -13,7 +13,6 @@ from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.core.models import MethodType
 
 
-
 logger = logging.getLogger("django.server")
 
 
@@ -27,7 +26,6 @@ class BaseController(View):
     validator: RequestValidator
     response_builder: ResponseBuilder
 
-
     def __init__(self, *args: tuple[Any], **kwargs: dict[str, Any]):
         super().__init__(*args, **kwargs)
 
@@ -36,7 +34,6 @@ class BaseController(View):
         self.dispatcher = RpcDispatcher()
         self.validator = RequestValidator()
         self.response_builder = ResponseBuilder()
-
 
     def _collect_declared_methods(self) -> dict[MethodType, Callable[..., Any]]:
         registry: dict[MethodType, Callable[..., Any]] = {}
@@ -55,7 +52,9 @@ class BaseController(View):
                 continue
 
             if method_name in registry:
-                raise ValueError(f"Method {method_name} already registered in {self.__class__.__name__}")
+                raise ValueError(
+                    f"Method {method_name} already registered in {self.__class__.__name__}"
+                )
 
             registry[method_name] = getattr(self, name)
 
