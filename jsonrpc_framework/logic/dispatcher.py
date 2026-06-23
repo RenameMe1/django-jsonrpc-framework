@@ -18,7 +18,7 @@ from jsonrpc_framework.core.error import (
 )
 from jsonrpc_framework.core.models import SuccessResponse, ErrorResponse
 from jsonrpc_framework.core.models import Request, Notification
-from jsonrpc_framework.controller.auth import AccessPolicy, run_auth, run_permissions
+from jsonrpc_framework.controller.auth import AccessPolicy, run_auth, run_permissions, ANONYMOUS_AUTH
 
 
 type ResponseType = SuccessResponse | ErrorResponse | None
@@ -84,14 +84,14 @@ class RpcDispatcher:
                 ),
             )
 
-
-        if not await run_permissions(access_policy, http_request, auth_result, handler):
-            return ErrorResponse(
-                id=None if isinstance(request, Notification) else request.id,
-                error=ForbiddenError(
-                    data=f"Forbidden access to method {handler.__name__}"
-                ),
-            )
+        if auth_result != ANONYMOUS_AUTH:
+            if not await run_permissions(access_policy, http_request, auth_result, handler):
+                return ErrorResponse(
+                    id=None if isinstance(request, Notification) else request.id,
+                    error=ForbiddenError(
+                        data=f"Forbidden access to method {handler.__name__}"
+                    ),
+                )
 
         result = await self._call_handler(handler, bound)
 
