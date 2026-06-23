@@ -74,19 +74,20 @@ class RpcDispatcher:
                 return ErrorResponse(id=request.id, error=handler)
 
         access_policy = self.resolve_method_access(handler)
-        auth_result = run_auth(access_policy, http_request)
+        auth_result = await run_auth(access_policy, http_request)
 
         if auth_result is None:
             return ErrorResponse(
-                id=None,
+                id=None if isinstance(request, Notification) else request.id,
                 error=UnauthorizedError(
-                    data=f"Method {handler.__name__} is private and credentials are incorrect"
+                    data=f"Method {handler.__name__} is private and credentials are incorrect or not present"
                 ),
             )
 
-        if not run_permissions(access_policy, http_request, auth_result, handler):
+
+        if not await run_permissions(access_policy, http_request, auth_result, handler):
             return ErrorResponse(
-                id=None,
+                id=None if isinstance(request, Notification) else request.id,
                 error=ForbiddenError(
                     data=f"Forbidden access to method {handler.__name__}"
                 ),

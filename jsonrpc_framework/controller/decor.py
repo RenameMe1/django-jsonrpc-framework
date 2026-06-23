@@ -52,16 +52,6 @@ def _decorate[R, **P](
     return wrapper
 
 
-def simple_decorator[R, **P](
-    func: Callable[P, R],
-) -> Callable[P, R]:
-    return _decorate(
-        func,
-        rpc_name=func.__name__,
-        description=func.__doc__,
-    )
-
-
 def parametrized_decorator[R, **P](
     func: Callable[P, R],
     *,
@@ -109,8 +99,15 @@ def jsonrpc_method(
         )
 
     if callable(name_or_func):
-        return simple_decorator(
+        return parametrized_decorator(
             name_or_func,
+            name=name_or_func,
+            summary=summary,
+            description=description if description is not None else name_or_func.__doc__,
+            tags=tags,
+            access=access,
+            auth=auth,
+            permissions=permissions,
         )
 
     return decorator

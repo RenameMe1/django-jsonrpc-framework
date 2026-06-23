@@ -54,6 +54,7 @@ class BaseController(View):
                 continue
 
             rpc_name = getattr(value, "__rpc_method_name__", None)
+            self._set_auth_metadata(value)
 
             if rpc_name is not None:
                 method_name = rpc_name
@@ -71,6 +72,10 @@ class BaseController(View):
 
         return registry
 
+    def _set_auth_metadata(self, func: Callable[..., Any]) -> None:
+        func.__rpc_method_access__ = getattr(func, "__rpc_method_access__", AccessType._NOT_SET)
+        func.__rpc_method_auth__ = getattr(func, "__rpc_method_auth__", self.auth_backends)
+        func.__rpc_method_permissions__ = getattr(func, "__rpc_method_permissions__", self.permission_backends)
 
     def _resolve_method_access(self, func: Callable[..., Any]) -> AccessPolicy:
         
@@ -82,7 +87,7 @@ class BaseController(View):
             access = self.default_access
 
         if access is None:
-            access = AccessType.PUBLIC
+            access = self.default_access
         if auth is None:
             auth = self.auth_backends
         if permissions is None:

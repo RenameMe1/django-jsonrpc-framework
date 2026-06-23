@@ -7,6 +7,7 @@ from jsonrpc_framework.logic.dispatcher import RpcDispatcher
 from jsonrpc_framework.core.models import MethodType, Notification, RpcError
 from jsonrpc_framework.core.models import Request
 from jsonrpc_framework.logic.responser import ResponseBuilder
+from jsonrpc_framework.controller.auth import AccessType, AccessPolicy
 
 # Validators fixtures
 
@@ -49,7 +50,7 @@ def unsupported_version_request() -> bytes:
 
 @pytest.fixture
 def dispatcher() -> RpcDispatcher:
-    return RpcDispatcher()
+    return RpcDispatcher(resolve_method_access=lambda func: AccessPolicy(access=AccessType.PUBLIC, auth=[], permissions=[]))
 
 
 async def async_method() -> str:
