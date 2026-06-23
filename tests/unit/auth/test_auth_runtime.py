@@ -6,7 +6,7 @@ from jsonrpc_framework.controller.auth import AccessType, AuthResult, run_auth, 
 from jsonrpc_framework.controller.decor import jsonrpc_method
 
 from django.http import HttpRequest, request
-from .conftest import BearerAuth, BearerToken, AdminPermission
+from .conftest import BearerAuth, BearerToken, AdminPermission, AsyncBearerAuth, AsyncAdminPermission
 
 pytestmark = pytest.mark.asyncio
 
@@ -34,7 +34,6 @@ async def test_auth_without_credentials() -> None:
     class TestController(BaseController):
 
         auth_backends = [BearerAuth]
-        permission_backends = [AdminPermission]
 
         @jsonrpc_method(access=AccessType.PUBLIC)
         def public(self) -> str:
@@ -72,7 +71,6 @@ async def test_auth_with_correct_credentials(
     class TestController(BaseController):
 
         auth_backends = [BearerAuth]
-        permission_backends = [AdminPermission]
 
         @jsonrpc_method(access=AccessType.PUBLIC)
         def public(self) -> str:
@@ -111,3 +109,30 @@ async def test_auth_with_correct_credentials(
         backend_used="BearerAuth_BearerToken",
     )
 
+
+
+async def test_async_auth_runtime(
+    admin_bearer_token: str,
+) -> None:
+    class TestController(BaseController):
+
+        default_access = AccessType.PRIVATE
+        auth_backends = [AsyncBearerAuth]
+
+        async def method_test(self) -> str:
+            return "test"
+
+    controller = TestController()
+    handler = controller.registry["test"]
+    access_policy = controller._resolve_method_access(handler)
+
+    request = HttpRequest()
+    request.META.update({"HTTP_AUTHORIZATION": f"Bearer {admin_bearer_token}"})
+
+    auth_result = await run_auth(access_policy, request)
+
+    assert auth_result == AuthResult(
+        auth_result=BearerToken(sub="test", admin=True, exp=auth_result.auth_result.exp),
+        credentials_present=True,
+        backend_used="BearerAuth_BearerToken",
+    )
