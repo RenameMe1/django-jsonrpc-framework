@@ -4,6 +4,8 @@ import inspect
 from typing import Any
 import logging
 
+from django.http import HttpRequest
+
 from jsonrpc_framework.core.models import MethodType, ParamType
 from jsonrpc_framework.logic.validator import RequestType, BatchType
 from jsonrpc_framework.core.error import (
@@ -11,9 +13,11 @@ from jsonrpc_framework.core.error import (
     InternalError,
     MethodNotFoundError,
     InvalidParamsError,
+    AuthError,
 )
 from jsonrpc_framework.core.models import SuccessResponse, ErrorResponse
 from jsonrpc_framework.core.models import Request, Notification
+from jsonrpc_framework.controller.auth import AccessPolicy, run_auth
 
 
 type ResponseType = SuccessResponse | ErrorResponse | None
@@ -24,10 +28,17 @@ logger = logging.getLogger("django.server")
 
 
 class RpcDispatcher:
+
+    resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]
+
+    def __init__(self, resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]):
+        self.resolve_method_access = resolve_method_access
+
     async def dispatch(
         self,
         body: RequestType | BatchType | RpcError,
         registry: dict[MethodType, HandlerType],
+        http_request: HttpRequest,
     ) -> ResponseType | BatchResponseType:
         """Public method to dispatch a request.
 
@@ -36,9 +47,9 @@ class RpcDispatcher:
             registry: A collector of methods.
         """
         if isinstance(body, Request | Notification):
-            return await self._dispatch_single(body, registry)
+            return await self._dispatch_single(body, registry, http_request)
         elif isinstance(body, list):
-            return await self._dispatch_batch(body, registry)
+            return await self._dispatch_batch(body, registry, http_request)
         elif isinstance(body, RpcError):
             return ErrorResponse(id=None, error=body)
 
@@ -46,6 +57,7 @@ class RpcDispatcher:
         self,
         request: RequestType,
         registry: dict[MethodType, HandlerType],
+        http_request: HttpRequest,
     ) -> ResponseType:
         """Dispatch a single request."""
 
@@ -59,6 +71,17 @@ class RpcDispatcher:
                 return ErrorResponse(id=None, error=handler)
             else:
                 return ErrorResponse(id=request.id, error=handler)
+
+        access_policy = self.resolve_method_access(handler)
+        auth_result = run_auth(access_policy, http_request)
+
+        if auth_result is None:
+            return ErrorResponse(
+                id=None,
+                error=AuthError(
+                    data=f"Method {handler.__name__} is private and credentials are incorrect"
+                ),
+            )
 
         result = await self._call_handler(handler, bound)
 

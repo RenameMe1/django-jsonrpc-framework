@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import wraps
 from typing import Any
 
@@ -20,12 +20,18 @@ def _decorate[R, **P](
     *,
     rpc_name: str,
     description: str | None,
-    access: AccessType | None = None,
+    access: AccessType = AccessType._NOT_SET,
     summary: str | None = None,
-    tags: list[str] | None = None,
-    auth: list[type[BaseAuthentication]] | None = None,
-    permissions: list[type[BasePermission]] | None = None,
+    tags: Sequence[str] | None = None,
+    auth: Sequence[type[BaseAuthentication]] | None = None,
+    permissions: Sequence[type[BasePermission]] | None = None,
 ) -> Callable[P, R]:
+
+    if not isinstance(access, AccessType):
+        raise ValueError(
+            f"Invalid access type: {access}, "
+            "expected AccessType.PUBLIC | AccessType.OPTIONAL | AccessType.PRIVATE"
+        )
 
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
@@ -62,10 +68,10 @@ def parametrized_decorator[R, **P](
     name: str | None,
     summary: str | None,
     description: str | None,
-    tags: list[str] | None,
-    access: AccessType | None,
-    auth: list[type[BaseAuthentication]] | None,
-    permissions: list[type[BasePermission]] | None,
+    tags: Sequence[str] | None,
+    access: AccessType,
+    auth: Sequence[type[BaseAuthentication]] | None,
+    permissions: Sequence[type[BasePermission]] | None,
 ) -> Callable[P, R]:
     rpc_name = name if isinstance(name, str) else func.__name__
     return _decorate(
@@ -85,10 +91,10 @@ def jsonrpc_method(
     *,
     summary: str | None = None,
     description: str | None = None,
-    tags: list[str] | None = None,
-    access: AccessType | None = None,
-    auth: list[type[BaseAuthentication]] | None = None,
-    permissions: list[type[BasePermission]] | None = None,
+    tags: Sequence[str] | None = None,
+    access: AccessType = AccessType._NOT_SET,
+    auth: Sequence[type[BaseAuthentication]] | None = None,
+    permissions: Sequence[type[BasePermission]] | None = None,
 ) -> Callable[..., Any]:
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         return parametrized_decorator(
