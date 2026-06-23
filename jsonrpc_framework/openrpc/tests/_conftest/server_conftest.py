@@ -1,8 +1,11 @@
 import pytest
 
-from jsonrpc_framework.openrpc.document.server import OpenRpcServer
+from jsonrpc_framework.openrpc.document.server import (
+    OpenRpcServer,
+    OpenRpcServerObjectVariable,
+)
 from jsonrpc_framework.openrpc.document.server._server import _OpenRpcServerTD
-from jsonrpc_framework.openrpc.document.server import OpenRpcServerObjectVariable
+
 
 
 @pytest.fixture

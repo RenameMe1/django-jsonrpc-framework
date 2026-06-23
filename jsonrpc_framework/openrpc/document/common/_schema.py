@@ -1,11 +1,12 @@
-from typing import Annotated, TypedDict, Literal, Any, is_typeddict
-from pydantic import Field, BeforeValidator
+from typing import Annotated, Any, Literal, TypedDict, is_typeddict
+
+from pydantic import BeforeValidator, Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
 
 __all__ = [
-    "OpenRpcSchema",
     "OpenRpcRefSchema",
+    "OpenRpcSchema",
 ]
 
 
@@ -20,11 +21,15 @@ def validate_type(v: Any) -> str:
         return "boolean"
     elif isinstance(v, list):
         return "array"
+<<<<<<< HEAD
     elif isinstance(v, dict):
         return "object"
     elif isinstance(v, type):
         return "object"
     elif is_typeddict(v):
+=======
+    elif isinstance(v, dict) or isinstance(v, type) or is_typeddict(v):
+>>>>>>> 041d11d (Ruff format)
         return "object"
     else:
         raise ValueError(f"Invalid type: {type(v)}")
@@ -33,7 +38,13 @@ def validate_type(v: Any) -> str:
 _OpenRpcSchemaTD = TypedDict(
     "_OpenRpcSchemaTD",
     {
+<<<<<<< HEAD
         "type": Literal["string", "integer", "number", "boolean", "array", "object"],
+=======
+        "type": Literal[
+            "string", "integer", "number", "boolean", "array", "object"
+        ],
+>>>>>>> 041d11d (Ruff format)
         "required": list[str] | None,
         "properties": dict[str, dict[str, str]] | None,
         "$ref": str | None,

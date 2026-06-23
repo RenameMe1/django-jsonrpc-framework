@@ -1,19 +1,24 @@
 import secrets
 import sys
-
 from typing import TypedDict
+
 from django.conf import settings
 from django.core.management import execute_from_command_line
 from django.urls import path
 
 from jsonrpc_framework.controller import BaseController
 from jsonrpc_framework.controller.decor import jsonrpc_method
-
-from jsonrpc_framework.controller.openrpc._openrpc import OpenRpcJsonView
+from jsonrpc_framework.controller.openrpc._openrpc import (
+    OpenRpcDocView,
+    OpenRpcJsonView,
+)
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
-from jsonrpc_framework.controller.openrpc._openrpc import OpenRpcDocView
 from jsonrpc_framework.core.error import RpcError
-from jsonrpc_framework.openrpc.document.info import OpenRpcContact, OpenRpcLicense
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcLicense,
+)
+
 
 
 class CustomError(RpcError):

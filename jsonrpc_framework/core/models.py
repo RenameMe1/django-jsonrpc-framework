@@ -1,8 +1,8 @@
-from typing import Any, Annotated
+from typing import Annotated, Any
 
-from pydantic import BaseModel, AfterValidator
+from pydantic import AfterValidator, BaseModel
+
 from jsonrpc_framework.core.error import RpcError
-
 
 JSON_RPC_VERSION = "2.0"
 

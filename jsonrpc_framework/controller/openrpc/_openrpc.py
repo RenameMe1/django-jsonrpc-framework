@@ -1,12 +1,12 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, override, Any
+from typing import Any, override
 
-from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, HttpResponseBase
 from django.http.response import FileResponse
-
 from django.views import View
+from django.views.generic.base import TemplateView
 
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
 
@@ -22,7 +22,13 @@ class OpenRpcJsonView(View):
     def get(
         self, request: HttpRequest, *args: tuple[Any], **kwargs: dict[str, Any]
     ) -> HttpResponse | FileResponse:
+<<<<<<< HEAD
         file_path = getattr(settings, "DJANGO_JSONRPC_DOCS", {}).get("FILE_PATH", None)
+=======
+        file_path = getattr(settings, "DJANGO_JSONRPC_DOCS", {}).get(
+            "FILE_PATH", None
+        )
+>>>>>>> 041d11d (Ruff format)
 
         if file_path is not None and Path(file_path).exists():
             return FileResponse(

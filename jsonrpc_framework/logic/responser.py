@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 from django.http import JsonResponse, HttpResponse
 from jsonrpc_framework.logic.dispatcher import ResponseType, BatchResponseType
 
 
+=======
+from django.http import HttpResponse, JsonResponse
+
+from jsonrpc_framework.logic.dispatcher import BatchResponseType, ResponseType
+
+
+>>>>>>> 041d11d (Ruff format)
 class ResponseBuilder:
     def build_response(
         self, response: ResponseType | BatchResponseType

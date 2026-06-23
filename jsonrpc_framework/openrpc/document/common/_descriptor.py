@@ -1,12 +1,21 @@
-from typing import Annotated, TypedDict, NotRequired
+from typing import Annotated, NotRequired, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
+<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.common._schema import OpenRcpTypeSchema
 from jsonrpc_framework.openrpc.document.common._schema import _OpenRpcSchemaTD
 from jsonrpc_framework.openrpc.document.common._schema import (
     OpenRpcRefSchema,
     OpenRpcDataSchema,
+=======
+from jsonrpc_framework.openrpc.document.common._schema import (
+    OpenRcpTypeSchema,
+    OpenRpcDataSchema,
+    OpenRpcRefSchema,
+    _OpenRpcSchemaTD,
+>>>>>>> 041d11d (Ruff format)
 )
 
 __all__ = [

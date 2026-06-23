@@ -1,5 +1,6 @@
-from django.urls import path
 from typing import Any
+
+from django.urls import path
 
 from jsonrpc_framework.controller import BaseController
 from jsonrpc_framework.core.error import ParseError, RpcError

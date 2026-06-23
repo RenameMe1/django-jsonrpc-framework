@@ -1,4 +1,5 @@
 from typing import Annotated, Any, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel

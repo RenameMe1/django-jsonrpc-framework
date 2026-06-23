@@ -8,7 +8,9 @@ def _test_openrpc_external_doc(
     openrpc_external_doc: OpenRpcExternalDoc,
     openrpc_external_doc_dict: _OpenRpcExternalDocTD,
 ) -> None:
-    _model_dict = openrpc_external_doc.model_dump(by_alias=True, exclude_none=True)
+    _model_dict = openrpc_external_doc.model_dump(
+        by_alias=True, exclude_none=True
+    )
 
     assert _model_dict == openrpc_external_doc_dict
 

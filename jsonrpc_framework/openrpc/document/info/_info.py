@@ -1,7 +1,12 @@
 from typing import Annotated, TypedDict
+
 from pydantic import Field
 
-from jsonrpc_framework.openrpc.document._base import OpenRPCModel, OPENRPC_VERSION
+from jsonrpc_framework.openrpc.document._base import (
+    OPENRPC_VERSION,
+    OpenRPCModel,
+)
+
 
 
 class OpenRpcLicense(OpenRPCModel):

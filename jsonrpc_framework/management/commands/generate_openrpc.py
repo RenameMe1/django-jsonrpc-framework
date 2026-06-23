@@ -1,10 +1,13 @@
+from argparse import ArgumentParser
 from pathlib import Path
+from typing import Any
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.module_loading import import_string
+
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
-from typing import Any
-from argparse import ArgumentParser
+
 
 
 class Command(BaseCommand):
@@ -45,7 +48,11 @@ class Command(BaseCommand):
         try:
             document = collector.build_document()
         except Exception as exc:
-            raise CommandError(f"Failed to build OpenRPC document: {exc}") from exc
+            raise CommandError(
+                f"Failed to build OpenRPC document: {exc}"
+            ) from exc
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(document, encoding="utf-8")
-        self.stdout.write(self.style.SUCCESS(f"OpenRPC saved to: {output_path}"))
+        self.stdout.write(
+            self.style.SUCCESS(f"OpenRPC saved to: {output_path}")
+        )

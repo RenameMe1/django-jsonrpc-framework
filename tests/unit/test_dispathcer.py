@@ -1,5 +1,8 @@
+from collections.abc import Callable
+
 import pytest
 
+<<<<<<< HEAD
 from django.http import HttpRequest
 
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
@@ -12,6 +15,17 @@ from jsonrpc_framework.core.models import (
 from collections.abc import Callable
 from jsonrpc_framework.core.models import Request, Notification
 
+=======
+from jsonrpc_framework.core.models import (
+    ErrorResponse,
+    MethodType,
+    Notification,
+    Request,
+    RpcError,
+    SuccessResponse,
+)
+from jsonrpc_framework.logic.dispatcher import RpcDispatcher
+>>>>>>> 041d11d (Ruff format)
 
 pytestmark = pytest.mark.asyncio
 
@@ -135,19 +149,27 @@ async def test_valid_requests_batch_dispatching(
 async def test_valid_batch_with_request_and_notification(
     dispatcher: RpcDispatcher,
     registry: dict[MethodType, Callable],
-    valid_requests_batch_with_request_and_notification: list[Request | Notification],
+    valid_requests_batch_with_request_and_notification: list[
+        Request | Notification
+    ],
 ) -> None:
     result = await dispatcher.dispatch(
+<<<<<<< HEAD
         valid_requests_batch_with_request_and_notification,
         registry,
         http_request=HttpRequest(),
+=======
+        valid_requests_batch_with_request_and_notification, registry
+>>>>>>> 041d11d (Ruff format)
     )
 
     assert isinstance(result, list)
     assert len(result) == 1
     assert all(isinstance(item, SuccessResponse) for item in result)
 
-    assert result[0].id == valid_requests_batch_with_request_and_notification[0].id
+    assert (
+        result[0].id == valid_requests_batch_with_request_and_notification[0].id
+    )
 
 
 async def test_batch_with_errors(

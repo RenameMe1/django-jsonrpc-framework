@@ -1,4 +1,5 @@
 from typing import Annotated, Any, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
@@ -6,7 +7,10 @@ from jsonrpc_framework.openrpc.document.common._link_server import (
     OpenRpcLinkObjectServer,
     _OpenRpcLinkObjectServerTD,
 )
+<<<<<<< HEAD
 
+=======
+>>>>>>> 041d11d (Ruff format)
 
 __all__ = [
     "OpenRpcLinkObject",

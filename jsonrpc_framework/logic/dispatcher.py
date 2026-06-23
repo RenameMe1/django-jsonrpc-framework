@@ -1,7 +1,9 @@
+import inspect
+import logging
 from collections.abc import Callable
 from inspect import BoundArguments
-import inspect
 from typing import Any
+<<<<<<< HEAD
 import logging
 
 from django.http import HttpRequest
@@ -24,7 +26,24 @@ from jsonrpc_framework.controller.auth import (
     run_permissions,
     ANONYMOUS_AUTH,
 )
+=======
+>>>>>>> 041d11d (Ruff format)
 
+from jsonrpc_framework.core.error import (
+    InternalError,
+    InvalidParamsError,
+    MethodNotFoundError,
+    RpcError,
+)
+from jsonrpc_framework.core.models import (
+    ErrorResponse,
+    MethodType,
+    Notification,
+    ParamType,
+    Request,
+    SuccessResponse,
+)
+from jsonrpc_framework.logic.validator import BatchType, RequestType
 
 type ResponseType = SuccessResponse | ErrorResponse | None
 type BatchResponseType = list[SuccessResponse | ErrorResponse]
@@ -32,6 +51,7 @@ type HandlerType = Callable[..., Any]
 
 logger = logging.getLogger("django.server")
 
+<<<<<<< HEAD
 
 class RpcDispatcher:
     resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]
@@ -40,12 +60,18 @@ class RpcDispatcher:
         self, resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]
     ):
         self.resolve_method_access = resolve_method_access
+=======
+>>>>>>> 041d11d (Ruff format)
 
+class RpcDispatcher:
     async def dispatch(
         self,
         body: RequestType | BatchType | RpcError,
         registry: dict[MethodType, HandlerType],
+<<<<<<< HEAD
         http_request: HttpRequest,
+=======
+>>>>>>> 041d11d (Ruff format)
     ) -> ResponseType | BatchResponseType:
         """Public method to dispatch a request.
 
@@ -64,7 +90,10 @@ class RpcDispatcher:
         self,
         request: RequestType,
         registry: dict[MethodType, HandlerType],
+<<<<<<< HEAD
         http_request: HttpRequest,
+=======
+>>>>>>> 041d11d (Ruff format)
     ) -> ResponseType:
         """Dispatch a single request."""
 
@@ -77,8 +106,11 @@ class RpcDispatcher:
         if isinstance(handler, RpcError):
             if isinstance(request, Request):
                 return ErrorResponse(id=request.id, error=handler)
+<<<<<<< HEAD
             else:
                 return None
+=======
+>>>>>>> 041d11d (Ruff format)
 
         access_policy = self.resolve_method_access(handler)
         auth_result = await run_auth(access_policy, http_request)
@@ -164,7 +196,10 @@ class RpcDispatcher:
         self,
         requests: BatchType,
         registry: dict[MethodType, HandlerType],
+<<<<<<< HEAD
         http_request: HttpRequest,
+=======
+>>>>>>> 041d11d (Ruff format)
     ) -> BatchResponseType:
         batch_response: BatchResponseType = []
 

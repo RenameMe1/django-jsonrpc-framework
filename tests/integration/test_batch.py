@@ -1,6 +1,5 @@
 from django.test import Client
 
-
 # Specification batch tests
 
 
@@ -9,7 +8,11 @@ def test_all_notifications_batch(client: Client) -> None:
         "/jsonrpc",
         json=[
             {"jsonrpc": "2.0", "method": "test"},
-            {"jsonrpc": "2.0", "method": "test_positional_params", "params": [1, 2, 3]},
+            {
+                "jsonrpc": "2.0",
+                "method": "test_positional_params",
+                "params": [1, 2, 3],
+            },
         ],
     )
     assert response.status_code == 204
@@ -26,7 +29,15 @@ def test_batch(client: Client) -> None:
                 "params": [1, 2, 3],
                 "id": 1,
             },
+<<<<<<< HEAD
             {"jsonrpc": "2.0", "method": "test_positional_params", "params": [4]},
+=======
+            {
+                "jsonrpc": "2.0",
+                "method": "test_positional_params",
+                "params": [4],
+            },
+>>>>>>> 041d11d (Ruff format)
             {
                 "jsonrpc": "2.0",
                 "method": "test_positional_params",
@@ -46,11 +57,23 @@ def test_batch(client: Client) -> None:
 
     assert response.status_code == 200
     assert response.json() == [
-        {"jsonrpc": "2.0", "result": "test_positional_params: (1, 2, 3)", "id": 1},
+        {
+            "jsonrpc": "2.0",
+            "result": "test_positional_params: (1, 2, 3)",
+            "id": 1,
+        },
         {"jsonrpc": "2.0", "result": "test_positional_params: (1, 2)", "id": 3},
         {
             "jsonrpc": "2.0",
+<<<<<<< HEAD
             "error": {"code": -32600, "message": "Invalid request", "data": None},
+=======
+            "error": {
+                "code": -32600,
+                "message": "Invalid request",
+                "data": None,
+            },
+>>>>>>> 041d11d (Ruff format)
             "id": None,
         },
         {
@@ -124,7 +147,15 @@ def test_empty_batch(client: Client) -> None:
     assert response.status_code == 200
     assert response.json() == {
         "jsonrpc": "2.0",
+<<<<<<< HEAD
         "error": {"code": -32600, "message": "Invalid request", "data": "Empty batch"},
+=======
+        "error": {
+            "code": -32600,
+            "message": "Invalid request",
+            "data": "Empty batch",
+        },
+>>>>>>> 041d11d (Ruff format)
         "id": None,
     }
 
@@ -144,7 +175,15 @@ def test_batch_with_invalid_json(client: Client) -> None:
 
     assert response.json() == {
         "jsonrpc": "2.0",
+<<<<<<< HEAD
         "error": {"code": -32700, "message": "Parse error", "data": "Invalid JSON"},
+=======
+        "error": {
+            "code": -32700,
+            "message": "Parse error",
+            "data": "Invalid JSON",
+        },
+>>>>>>> 041d11d (Ruff format)
         "id": None,
     }
     assert response.status_code == 200

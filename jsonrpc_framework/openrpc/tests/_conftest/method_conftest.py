@@ -1,5 +1,6 @@
 import pytest
 
+<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.method._method import (
     _OpenRpcMethodTD,
     OpenRpcMethod,
@@ -20,8 +21,33 @@ from jsonrpc_framework.openrpc.document.server import (
 from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
 from jsonrpc_framework.openrpc.document.common import OpenRcpTypeSchema
 
+=======
+>>>>>>> 041d11d (Ruff format)
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
-from jsonrpc_framework.openrpc.document.info import OpenRpcContact, OpenRpcLicense
+from jsonrpc_framework.openrpc.document.common import (
+    OpenRcpContentDescriptorObject,
+    OpenRcpTypeSchema,
+    OpenRpcErrorObject,
+    OpenRpcExampleObject,
+    OpenRpcExamplePairingObject,
+    OpenRpcLinkObject,
+    OpenRpcLinkObjectServer,
+    OpenRpcTag,
+)
+from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcLicense,
+)
+from jsonrpc_framework.openrpc.document.method._method import (
+    OpenRpcMethod,
+    _OpenRpcMethodTD,
+)
+from jsonrpc_framework.openrpc.document.server import (
+    OpenRpcServer,
+    OpenRpcServerObjectVariable,
+)
+
 
 
 @pytest.fixture
@@ -265,7 +291,9 @@ def openrpc_server_link() -> OpenRpcLinkObjectServer:
 
 
 @pytest.fixture
-def openrpc_link(openrpc_server_link: OpenRpcLinkObjectServer) -> OpenRpcLinkObject:
+def openrpc_link(
+    openrpc_server_link: OpenRpcLinkObjectServer,
+) -> OpenRpcLinkObject:
     return OpenRpcLinkObject(
         name="test_link",
         summary="Test link summary",

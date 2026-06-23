@@ -3,15 +3,25 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from jsonrpc_framework.core.models import Request, Notification
-from jsonrpc_framework.core.error import ParseError, InvalidRequestError, RpcError
+from jsonrpc_framework.core.error import (
+    InvalidRequestError,
+    ParseError,
+    RpcError,
+)
+from jsonrpc_framework.core.models import Notification, Request
 
 type RequestType = Request | Notification
 type BatchType = list[Request | Notification | RpcError]
 
 
 class RequestValidator:
+<<<<<<< HEAD
     def validate_body(self, body: bytes | Any) -> RequestType | BatchType | RpcError:
+=======
+    def validate_body(
+        self, body: bytes | Any
+    ) -> RequestType | BatchType | RpcError:
+>>>>>>> 041d11d (Ruff format)
         try:
             json_body = json.loads(body)
         except json.JSONDecodeError:
@@ -44,7 +54,9 @@ class RequestValidator:
 
         return batch
 
-    def _validate_single(self, json_body: dict[str, Any]) -> RequestType | RpcError:
+    def _validate_single(
+        self, json_body: dict[str, Any]
+    ) -> RequestType | RpcError:
 
         try:
             request = self._validate_request_type(json_body)

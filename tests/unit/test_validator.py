@@ -1,6 +1,6 @@
+from jsonrpc_framework.core.error import InvalidRequestError, ParseError
+from jsonrpc_framework.core.models import Notification, Request
 from jsonrpc_framework.logic.validator import RequestValidator
-from jsonrpc_framework.core.models import Request, Notification
-from jsonrpc_framework.core.error import ParseError, InvalidRequestError
 
 
 def test_valid_single_request(

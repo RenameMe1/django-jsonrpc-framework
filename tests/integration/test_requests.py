@@ -25,7 +25,11 @@ def test_prc_call_with_invalid_json(client: Client) -> None:
     assert response.status_code == 200
     assert response.json() == {
         "jsonrpc": "2.0",
-        "error": {"code": -32700, "message": "Parse error", "data": "Invalid JSON"},
+        "error": {
+            "code": -32700,
+            "message": "Parse error",
+            "data": "Invalid JSON",
+        },
         "id": None,
     }
 

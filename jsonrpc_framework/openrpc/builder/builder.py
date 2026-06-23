@@ -1,13 +1,16 @@
 import logging
 
-from jsonrpc_framework.openrpc.document._openrpc_document import OpenRpcDocument
-from jsonrpc_framework.openrpc.document.info import OpenRpcInfo
 from jsonrpc_framework.openrpc.document._base import OPENRPC_VERSION
-from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
-from jsonrpc_framework.openrpc.document.info import OpenRpcContact, OpenRpcLicense
-from jsonrpc_framework.openrpc.document.server import OpenRpcServer
-from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
+from jsonrpc_framework.openrpc.document._openrpc_document import OpenRpcDocument
 from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
+from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcInfo,
+    OpenRpcLicense,
+)
+from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
+from jsonrpc_framework.openrpc.document.server import OpenRpcServer
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
 from django.conf import settings
-from jsonrpc_framework.logic.responser import ResponseBuilder
-from jsonrpc_framework.core.models import SuccessResponse
+
 from jsonrpc_framework.core.error import MethodNotFoundError
-from jsonrpc_framework.core.models import ErrorResponse
+from jsonrpc_framework.core.models import ErrorResponse, SuccessResponse
+from jsonrpc_framework.logic.responser import ResponseBuilder
 
 settings.configure()
 
@@ -42,6 +42,7 @@ def test_batch_response(response_builder: ResponseBuilder) -> None:
     )
 
     assert response.status_code == 200
+<<<<<<< HEAD
     assert (
         response.content
         == (
@@ -50,4 +51,11 @@ def test_batch_response(response_builder: ResponseBuilder) -> None:
             '{"code": -32601, "message": "Method not found", "data": "test"}, '
             '"id": "2"}]'
         ).encode()
+=======
+    assert response.content == (
+        b'[{"jsonrpc": "2.0", "result": 1, "id": 1}, '
+        b'{"jsonrpc": "2.0", "error": '
+        b'{"code": -32601, "message": "Method not found", "data": "test"}, '
+        b'"id": "2"}]'
+>>>>>>> 041d11d (Ruff format)
     )

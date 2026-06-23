@@ -1,16 +1,18 @@
 import logging
+<<<<<<< HEAD
 from typing import Any
 from collections.abc import Callable, Sequence
+=======
+from collections.abc import Callable
+from typing import Any
+>>>>>>> 041d11d (Ruff format)
 
-from django.views import View
 from django.http import HttpRequest, HttpResponse
-
-from jsonrpc_framework.logic.dispatcher import RpcDispatcher
-from jsonrpc_framework.logic.validator import RequestValidator, RequestType, BatchType
-from jsonrpc_framework.logic.responser import ResponseBuilder
+from django.views import View
 
 from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.core.models import MethodType
+<<<<<<< HEAD
 from jsonrpc_framework.controller.auth import (
     AccessType,
     BasePermission,
@@ -18,6 +20,15 @@ from jsonrpc_framework.controller.auth import (
     AccessPolicy,
 )
 
+=======
+from jsonrpc_framework.logic.dispatcher import RpcDispatcher
+from jsonrpc_framework.logic.responser import ResponseBuilder
+from jsonrpc_framework.logic.validator import (
+    BatchType,
+    RequestType,
+    RequestValidator,
+)
+>>>>>>> 041d11d (Ruff format)
 
 logger = logging.getLogger("django.server")
 

@@ -1,4 +1,5 @@
 from typing import Annotated, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
@@ -6,7 +7,10 @@ from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
 from jsonrpc_framework.openrpc.document.external_docs._external_docs import (
     _OpenRpcExternalDocTD,
 )
+<<<<<<< HEAD
 
+=======
+>>>>>>> 041d11d (Ruff format)
 
 __all__ = [
     "OpenRpcTag",

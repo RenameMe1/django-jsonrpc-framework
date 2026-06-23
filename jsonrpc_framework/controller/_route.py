@@ -2,7 +2,6 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import Any
 
-
 from jsonrpc_framework.controller._base import BaseController
 
 

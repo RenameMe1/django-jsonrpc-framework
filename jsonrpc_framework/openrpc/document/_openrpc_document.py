@@ -1,12 +1,16 @@
 from typing import Annotated, Any
-from pydantic import ConfigDict, Field, field_validator, ValidationInfo
 
-from jsonrpc_framework.openrpc.document._base import OpenRPCModel, OPENRPC_VERSION
-from jsonrpc_framework.openrpc.document.info import OpenRpcInfo
-from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
-from jsonrpc_framework.openrpc.document.server import OpenRpcServer
-from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
+from pydantic import ConfigDict, Field, ValidationInfo, field_validator
+
+from jsonrpc_framework.openrpc.document._base import (
+    OPENRPC_VERSION,
+    OpenRPCModel,
+)
 from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
+from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
+from jsonrpc_framework.openrpc.document.info import OpenRpcInfo
+from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
+from jsonrpc_framework.openrpc.document.server import OpenRpcServer
 
 
 class OpenRpcDocument(OpenRPCModel):

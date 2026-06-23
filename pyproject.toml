@@ -68,3 +68,14 @@ include = [
   "README.md",
   "pyproject.toml",
 ]
+<<<<<<< HEAD
+=======
+
+[tool.ruff]
+line-length = 80
+fix = true
+exclude = [
+    "jsonrpc_framework/openrpc/tests/_conftest/__init__.py",
+    "jsonrpc_framework/openrpc/tests/conftest.py"
+]
+>>>>>>> 041d11d (Ruff format)

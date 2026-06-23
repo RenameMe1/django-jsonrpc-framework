@@ -26,17 +26,27 @@ def _decorate[R, **P](
     auth: Sequence[type[BaseAuthentication]] | None = None,
     permissions: Sequence[type[BasePermission]] | None = None,
 ) -> Callable[P, R]:
+<<<<<<< HEAD
 
     if not isinstance(access, AccessType):
         raise ValueError(
             f"Invalid access type: {access}, "
             "expected AccessType.PUBLIC | AccessType.OPTIONAL | AccessType.PRIVATE"
         )
+=======
+    # Keep an explicit RPC alias on the callable, because class attribute
+    # names are used during registry collection and cannot be renamed here.
+    func.__rpc_method_name__ = rpc_name
+    func.__rpc_method_summary__ = summary
+    func.__rpc_method_description__ = description
+    func.__rpc_method_tags__ = tags
+>>>>>>> 041d11d (Ruff format)
 
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         return func(*args, **kwargs)
 
+<<<<<<< HEAD
     _add_metadata(
         func,
         wrapper,
@@ -48,6 +58,12 @@ def _decorate[R, **P](
         auth=auth,
         permissions=permissions,
     )
+=======
+    wrapper.__rpc_method_name__ = rpc_name
+    wrapper.__rpc_method_summary__ = summary
+    wrapper.__rpc_method_description__ = description
+    wrapper.__rpc_method_tags__ = tags
+>>>>>>> 041d11d (Ruff format)
 
     return wrapper
 

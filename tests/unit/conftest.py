@@ -2,12 +2,19 @@ from collections.abc import Callable
 
 import pytest
 
-from jsonrpc_framework.logic.validator import RequestValidator
+from jsonrpc_framework.core.models import (
+    MethodType,
+    Notification,
+    Request,
+    RpcError,
+)
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
-from jsonrpc_framework.core.models import MethodType, Notification, RpcError
-from jsonrpc_framework.core.models import Request
 from jsonrpc_framework.logic.responser import ResponseBuilder
+<<<<<<< HEAD
 from jsonrpc_framework.controller.auth import AccessType, AccessPolicy
+=======
+from jsonrpc_framework.logic.validator import RequestValidator
+>>>>>>> 041d11d (Ruff format)
 
 # Validators fixtures
 
@@ -55,6 +62,7 @@ def dispatcher() -> RpcDispatcher:
             access=AccessType.PUBLIC, auth=[], permissions=[]
         )
     )
+
 
 
 async def async_method() -> str:

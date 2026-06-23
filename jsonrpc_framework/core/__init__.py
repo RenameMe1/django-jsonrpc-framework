@@ -1,4 +1,5 @@
 from .error import (
+<<<<<<< HEAD
     RpcError,
     ParseError,
     InvalidRequestError,
@@ -14,4 +15,21 @@ __all__ = [
     "MethodNotFoundError",
     "InvalidParamsError",
     "InternalError",
+=======
+    InternalError,
+    InvalidParamsError,
+    InvalidRequestError,
+    MethodNotFoundError,
+    ParseError,
+    RpcError,
+)
+
+__all__ = [
+    "InternalError",
+    "InvalidParamsError",
+    "InvalidRequestError",
+    "MethodNotFoundError",
+    "ParseError",
+    "RpcError",
+>>>>>>> 041d11d (Ruff format)
 ]

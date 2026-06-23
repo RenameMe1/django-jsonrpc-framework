@@ -1,9 +1,10 @@
-from typing import Callable, get_type_hints, is_typeddict
 import inspect
-from typing import Any
 import types
+from collections.abc import Callable
+from typing import Any, get_type_hints, is_typeddict
 
 from jsonrpc_framework.controller._base import BaseController
+<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.method._method import OpenRpcMethod
 from jsonrpc_framework.openrpc.document.common import (
     OpenRpcTag,
@@ -18,7 +19,21 @@ from jsonrpc_framework.openrpc.document.common import (
     OpenRpcRefSchema,
 )
 
+=======
+>>>>>>> 041d11d (Ruff format)
 from jsonrpc_framework.core.error import RpcError
+from jsonrpc_framework.openrpc.document.common import (
+    OpenRcpContentDescriptorObject,
+    OpenRcpTypeSchema,
+    OpenRpcDataSchema,
+    OpenRpcErrorObject,
+    OpenRpcRefSchema,
+    OpenRpcTag,
+    validate_type_name,
+)
+from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
+from jsonrpc_framework.openrpc.document.method._method import OpenRpcMethod
+
 
 
 class ExampleCollector: ...
@@ -38,15 +53,27 @@ class InputCollector:
 
         for param in params.values():
             if is_typeddict(param.annotation):
-                openrpc_method.params.append(self._collect_content_descriptor(param))
+                openrpc_method.params.append(
+                    self._collect_content_descriptor(param)
+                )
             else:
                 openrpc_method.params.append(
                     OpenRcpContentDescriptorObject(
                         name=param.name,
                         schema_={
+<<<<<<< HEAD
                             "type": validate_type_name(param.annotation.__name__),
                         },
                         required=True if param.default is param.empty else False,
+=======
+                            "type": validate_type_name(
+                                param.annotation.__name__
+                            ),
+                        },
+                        required=True
+                        if param.default is param.empty
+                        else False,
+>>>>>>> 041d11d (Ruff format)
                         # TODO: How define deprecated params?
                     )
                 )
@@ -124,9 +151,13 @@ class OutputCollector:
             )
         )
 
-    def _collect_result(self, return_type: type, openrpc_method: OpenRpcMethod) -> None:
+    def _collect_result(
+        self, return_type: type, openrpc_method: OpenRpcMethod
+    ) -> None:
         if is_typeddict(return_type):
-            self._collect_complex_context_descriptor(return_type, openrpc_method)
+            self._collect_complex_context_descriptor(
+                return_type, openrpc_method
+            )
         else:
             openrpc_method.result = OpenRcpContentDescriptorObject(
                 name=return_type.__name__,
@@ -205,7 +236,13 @@ class MethodsCollector:
         __rpc_method_tags__ = getattr(method, "__rpc_method_tags__", [])
 
         if __rpc_method_tags__:
+<<<<<<< HEAD
             openrpc_method.tags = [OpenRpcTag(name=tag) for tag in __rpc_method_tags__]
+=======
+            openrpc_method.tags = [
+                OpenRpcTag(name=tag) for tag in __rpc_method_tags__
+            ]
+>>>>>>> 041d11d (Ruff format)
 
     def _collect_errors(self, method: Callable[..., Any]) -> None:
         return None
