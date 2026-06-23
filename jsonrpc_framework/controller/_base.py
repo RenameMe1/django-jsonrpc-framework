@@ -1,18 +1,19 @@
 import logging
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
-from django.views import View
 from django.http import HttpRequest, HttpResponse
-
-from jsonrpc_framework.logic.dispatcher import RpcDispatcher
-from jsonrpc_framework.logic.validator import RequestValidator, RequestType, BatchType
-from jsonrpc_framework.logic.responser import ResponseBuilder
+from django.views import View
 
 from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.core.models import MethodType
-
-
+from jsonrpc_framework.logic.dispatcher import RpcDispatcher
+from jsonrpc_framework.logic.responser import ResponseBuilder
+from jsonrpc_framework.logic.validator import (
+    BatchType,
+    RequestType,
+    RequestValidator,
+)
 
 logger = logging.getLogger("django.server")
 
@@ -27,7 +28,6 @@ class BaseController(View):
     validator: RequestValidator
     response_builder: ResponseBuilder
 
-
     def __init__(self, *args: tuple[Any], **kwargs: dict[str, Any]):
         super().__init__(*args, **kwargs)
 
@@ -36,7 +36,6 @@ class BaseController(View):
         self.dispatcher = RpcDispatcher()
         self.validator = RequestValidator()
         self.response_builder = ResponseBuilder()
-
 
     def _collect_declared_methods(self) -> dict[MethodType, Callable[..., Any]]:
         registry: dict[MethodType, Callable[..., Any]] = {}
@@ -55,7 +54,9 @@ class BaseController(View):
                 continue
 
             if method_name in registry:
-                raise ValueError(f"Method {method_name} already registered in {self.__class__.__name__}")
+                raise ValueError(
+                    f"Method {method_name} already registered in {self.__class__.__name__}"
+                )
 
             registry[method_name] = getattr(self, name)
 

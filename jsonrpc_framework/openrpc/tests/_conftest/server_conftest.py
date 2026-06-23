@@ -1,8 +1,11 @@
 import pytest
 
-from jsonrpc_framework.openrpc.document.server import OpenRpcServer
+from jsonrpc_framework.openrpc.document.server import (
+    OpenRpcServer,
+    OpenRpcServerObjectVariable,
+)
 from jsonrpc_framework.openrpc.document.server._server import _OpenRpcServerTD
-from jsonrpc_framework.openrpc.document.server import OpenRpcServerObjectVariable
+
 
 @pytest.fixture
 def openrpc_server() -> OpenRpcServer:
@@ -20,6 +23,7 @@ def openrpc_server() -> OpenRpcServer:
         },
     )
 
+
 @pytest.fixture
 def openrpc_server_dict() -> _OpenRpcServerTD:
     return {
@@ -36,11 +40,13 @@ def openrpc_server_dict() -> _OpenRpcServerTD:
         },
     }
 
+
 @pytest.fixture
 def openrpc_server_minimal() -> OpenRpcServer:
     return OpenRpcServer(
         url="https://example.com/server",
     )
+
 
 @pytest.fixture
 def openrpc_server_minimal_dict() -> _OpenRpcServerTD:

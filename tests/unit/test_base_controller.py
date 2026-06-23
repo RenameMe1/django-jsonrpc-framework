@@ -3,8 +3,10 @@ import pytest
 from jsonrpc_framework.controller._base import BaseController
 from jsonrpc_framework.controller.decor import jsonrpc_method
 
+
 def test_collect_declared_methods() -> None:
     """Test default method names collection."""
+
     class TestController(BaseController):
         def method_other(self) -> str:
             return "other"
@@ -14,13 +16,16 @@ def test_collect_declared_methods() -> None:
 
     controller = TestController()
 
-    assert controller.registry == {"other": controller.method_other, "another": controller.method_another}
+    assert controller.registry == {
+        "other": controller.method_other,
+        "another": controller.method_another,
+    }
 
 
 def test_decorator_method() -> None:
     """Test method names collection with decorator."""
-    class TestController(BaseController):
 
+    class TestController(BaseController):
         @jsonrpc_method
         def method_other(self) -> str:
             return "other"
@@ -36,8 +41,10 @@ def test_decorator_method() -> None:
         "my_another": controller.my_another,
     }
 
+
 def test_change_alias_method() -> None:
     """Test changing method alias."""
+
     class TestController(BaseController):
         @jsonrpc_method("first")
         def method_other(self) -> str:
@@ -56,8 +63,8 @@ def test_change_alias_method() -> None:
 
 def test_name_conflict() -> None:
     """Test raising error on name conflict."""
+
     class TestController(BaseController):
-    
         def method_other(self) -> str:
             return "other1"
 
@@ -71,6 +78,7 @@ def test_name_conflict() -> None:
 
 def test_decorator_openrpc_metadata() -> None:
     """Test summary/description metadata with decorator alias."""
+
     class TestController(BaseController):
         @jsonrpc_method(
             "sum",
@@ -92,6 +100,7 @@ def test_decorator_openrpc_metadata() -> None:
 
 def test_decorator_openrpc_metadata_without_alias() -> None:
     """Test summary/description metadata without explicit alias."""
+
     class TestController(BaseController):
         @jsonrpc_method(
             summary="Echo value",

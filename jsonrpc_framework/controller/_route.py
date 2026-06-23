@@ -2,17 +2,18 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import Any
 
-
 from jsonrpc_framework.controller._base import BaseController
 
+
 class RouteController(BaseController):
-    """The conroller that collects BaseControllers to merge 
+    """The conroller that collects BaseControllers to merge
     their methods into a single controller.
 
     Args:
         path: The path to use in urlconfig.
         controllers: The list of BaseControllers to merge.
     """
+
     controllers: list[type[BaseController] | BaseController] = []
 
     def __init__(
@@ -28,7 +29,6 @@ class RouteController(BaseController):
         key_sources: dict[str, list[str]] = defaultdict(list)
 
         for raw_controller in controllers:
-
             controller = (
                 raw_controller()
                 if isinstance(raw_controller, type)
@@ -61,9 +61,8 @@ class RouteController(BaseController):
 
         self.registry = merged_registry
 
-
-    def as_view(self, **initkwargs: Any) -> Any: # type: ignore[override]
-        return BaseController.as_view.__func__( # type: ignore[attr-defined]
+    def as_view(self, **initkwargs: Any) -> Any:  # type: ignore[override]
+        return BaseController.as_view.__func__(  # type: ignore[attr-defined]
             self.__class__,
             path=self.path,
             controllers=self.controllers,

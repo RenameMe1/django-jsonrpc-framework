@@ -12,19 +12,19 @@ def _decorate[R, **P](
 ) -> Callable[P, R]:
     # Keep an explicit RPC alias on the callable, because class attribute
     # names are used during registry collection and cannot be renamed here.
-    setattr(func, "__rpc_method_name__", rpc_name)
-    setattr(func, "__rpc_method_summary__", summary)
-    setattr(func, "__rpc_method_description__", description)
-    setattr(func, "__rpc_method_tags__", tags)
+    func.__rpc_method_name__ = rpc_name
+    func.__rpc_method_summary__ = summary
+    func.__rpc_method_description__ = description
+    func.__rpc_method_tags__ = tags
 
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         return func(*args, **kwargs)
 
-    setattr(wrapper, "__rpc_method_name__", rpc_name)
-    setattr(wrapper, "__rpc_method_summary__", summary)
-    setattr(wrapper, "__rpc_method_description__", description)
-    setattr(wrapper, "__rpc_method_tags__", tags)
+    wrapper.__rpc_method_name__ = rpc_name
+    wrapper.__rpc_method_summary__ = summary
+    wrapper.__rpc_method_description__ = description
+    wrapper.__rpc_method_tags__ = tags
 
     return wrapper
 

@@ -1,14 +1,17 @@
-
 from jsonrpc_framework.controller._base import BaseController
+from jsonrpc_framework.controller.openrpc.collectors._method_collector import (
+    MethodsCollector,
+)
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
-from jsonrpc_framework.openrpc.document.info import OpenRpcContact, OpenRpcLicense
-
-from jsonrpc_framework.controller.openrpc.collectors._method_collector import MethodsCollector
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcLicense,
+)
 
 type ControllerType = type[BaseController] | BaseController
 
-class OpenRpcCollector:
 
+class OpenRpcCollector:
     controllers: tuple[type[BaseController] | BaseController, ...]
     builder: OpenRpcBuilder
     is_collected: bool
@@ -26,7 +29,7 @@ class OpenRpcCollector:
         license: OpenRpcLicense | None = None,
     ):
         self.controllers = controllers
-    
+
         self.method_collector = MethodsCollector()
         self.builder = OpenRpcBuilder(
             title=title,
@@ -50,7 +53,6 @@ class OpenRpcCollector:
 
         self.builder.add_components(self.method_collector.components)
         self.is_collected = True
-
 
     def build_document(self) -> str:
 

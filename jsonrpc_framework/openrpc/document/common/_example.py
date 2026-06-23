@@ -1,4 +1,5 @@
-from typing import Annotated, TypedDict, NotRequired
+from typing import Annotated, NotRequired, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
@@ -6,6 +7,7 @@ from jsonrpc_framework.openrpc.document._base import OpenRPCModel
 __all__ = [
     "OpenRpcExampleObject",
 ]
+
 
 class _OpenRpcExampleObjectTD(TypedDict):
     summary: NotRequired[str]
@@ -18,11 +20,11 @@ class OpenRpcExampleObject(OpenRPCModel):
     """The Example object is an object that defines an example that is
     intended to match the schema of a given Content Descriptor.
     """
+
     summary: Annotated[
         str | None,
         Field(
-            default=None,
-            description=("Short description for the example..")
+            default=None, description=("Short description for the example..")
         ),
     ] = None
     value: Annotated[
@@ -34,8 +36,8 @@ class OpenRpcExampleObject(OpenRPCModel):
                 "examples of media types that cannot naturally represented "
                 "in JSON, use a string value to contain the example, "
                 "escaping where necessary."
-        )
-        )
+            )
+        ),
     ]
     description: Annotated[
         str | None,

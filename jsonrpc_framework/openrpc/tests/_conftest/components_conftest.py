@@ -1,9 +1,20 @@
 import pytest
 
+from jsonrpc_framework.openrpc.document.common import (
+    OpenRcpContentDescriptorObject,
+    OpenRcpTypeSchema,
+    OpenRpcDataSchema,
+    OpenRpcErrorObject,
+    OpenRpcExampleObject,
+    OpenRpcExamplePairingObject,
+    OpenRpcLinkObject,
+    OpenRpcTag,
+)
 from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
-from jsonrpc_framework.openrpc.document.components._components import _OpenRpcComponentsTD
-from jsonrpc_framework.openrpc.document.common import OpenRpcLinkObject, OpenRpcErrorObject, OpenRpcExamplePairingObject, OpenRcpContentDescriptorObject, OpenRpcTag, OpenRpcDataSchema, OpenRpcExampleObject
-from jsonrpc_framework.openrpc.document.common import OpenRcpTypeSchema
+from jsonrpc_framework.openrpc.document.components._components import (
+    _OpenRpcComponentsTD,
+)
+
 
 @pytest.fixture
 def openrpc_components(
@@ -17,7 +28,14 @@ def openrpc_components(
         schemas={"test_schema": OpenRcpTypeSchema(type="string")},
         links={"test_link": openrpc_link},
         errors={"test_error": openrpc_error},
-        examples={"test_example": OpenRpcExampleObject(name="test_example", description="Test example description", value="test_value", schema=OpenRpcDataSchema(type="string"))},
+        examples={
+            "test_example": OpenRpcExampleObject(
+                name="test_example",
+                description="Test example description",
+                value="test_value",
+                schema=OpenRpcDataSchema(type="string"),
+            )
+        },
         examplePairings={"test_example_pairing": openrpc_example_pairing},
         contentDescriptors={"test_content_descriptor": openrpc_params},
         tags={"test_tag": openrpc_tag},
@@ -87,7 +105,7 @@ def openrpc_components_dict() -> _OpenRpcComponentsTD:
                     "name": "test_example",
                     "description": "Test example description",
                     "summary": "Test example summary",
-                    "value": "test_value",  
+                    "value": "test_value",
                 },
             },
         },

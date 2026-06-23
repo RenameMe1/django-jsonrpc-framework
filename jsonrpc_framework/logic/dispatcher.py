@@ -1,15 +1,24 @@
+import inspect
+import logging
 from collections.abc import Callable
 from inspect import BoundArguments
-import inspect
 from typing import Any
-import logging
 
-from jsonrpc_framework.core.models import MethodType, ParamType
-from jsonrpc_framework.logic.validator import RequestType, BatchType
-from jsonrpc_framework.core.error import RpcError, InternalError, MethodNotFoundError, InvalidParamsError
-from jsonrpc_framework.core.models import SuccessResponse, ErrorResponse
-from jsonrpc_framework.core.models import Request, Notification
-
+from jsonrpc_framework.core.error import (
+    InternalError,
+    InvalidParamsError,
+    MethodNotFoundError,
+    RpcError,
+)
+from jsonrpc_framework.core.models import (
+    ErrorResponse,
+    MethodType,
+    Notification,
+    ParamType,
+    Request,
+    SuccessResponse,
+)
+from jsonrpc_framework.logic.validator import BatchType, RequestType
 
 type ResponseType = SuccessResponse | ErrorResponse | None
 type BatchResponseType = list[SuccessResponse | ErrorResponse]
@@ -17,12 +26,12 @@ type HandlerType = Callable[..., Any]
 
 logger = logging.getLogger("django.server")
 
-class RpcDispatcher:
 
+class RpcDispatcher:
     async def dispatch(
-            self,
-            body: RequestType | BatchType | RpcError,
-            registry: dict[MethodType, HandlerType],
+        self,
+        body: RequestType | BatchType | RpcError,
+        registry: dict[MethodType, HandlerType],
     ) -> ResponseType | BatchResponseType:
         """Public method to dispatch a request.
 
@@ -38,9 +47,9 @@ class RpcDispatcher:
             return ErrorResponse(id=None, error=body)
 
     async def _dispatch_single(
-            self,
-            request: RequestType,
-            registry: dict[MethodType, HandlerType],
+        self,
+        request: RequestType,
+        registry: dict[MethodType, HandlerType],
     ) -> ResponseType:
         """Dispatch a single request."""
 
@@ -54,7 +63,6 @@ class RpcDispatcher:
                 return ErrorResponse(id=None, error=handler)
             else:
                 return ErrorResponse(id=request.id, error=handler)
-            
 
         result = await self._call_handler(handler, bound)
 
@@ -67,12 +75,11 @@ class RpcDispatcher:
         else:
             return None
 
-
     def _get_handler(
-            self,
-            method: MethodType,
-            params: ParamType,
-            registry: dict[MethodType, HandlerType],
+        self,
+        method: MethodType,
+        params: ParamType,
+        registry: dict[MethodType, HandlerType],
     ) -> tuple[HandlerType | RpcError, BoundArguments | None]:
         """Get a handler from registry and bind params."""
 
@@ -98,18 +105,17 @@ class RpcDispatcher:
         bound.apply_defaults()
 
         return handler, bound
-            
 
     async def _call_handler(
         self,
         handler: HandlerType,
         bound: BoundArguments | None,
-    ) -> Any | RpcError: 
+    ) -> Any | RpcError:
         try:
             if bound is None:
                 result = handler()
             else:
-               result = handler(*bound.args, **bound.kwargs)
+                result = handler(*bound.args, **bound.kwargs)
 
             if inspect.isawaitable(result):
                 result = await result
@@ -121,9 +127,9 @@ class RpcDispatcher:
         return result
 
     async def _dispatch_batch(
-            self,
-            requests: BatchType,
-            registry: dict[MethodType, HandlerType],
+        self,
+        requests: BatchType,
+        registry: dict[MethodType, HandlerType],
     ) -> BatchResponseType:
         batch_response: BatchResponseType = []
 

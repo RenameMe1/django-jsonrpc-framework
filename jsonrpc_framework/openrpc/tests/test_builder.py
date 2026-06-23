@@ -1,15 +1,20 @@
 import json
 
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
-from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
-from jsonrpc_framework.openrpc.document.server import OpenRpcServer
-from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
 from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
-from jsonrpc_framework.openrpc.document.external_docs._external_docs import _OpenRpcExternalDocTD
-from jsonrpc_framework.openrpc.document.server._server import _OpenRpcServerTD
-from jsonrpc_framework.openrpc.document.method._method import _OpenRpcMethodTD
-from jsonrpc_framework.openrpc.document.components._components import _OpenRpcComponentsTD
+from jsonrpc_framework.openrpc.document.components._components import (
+    _OpenRpcComponentsTD,
+)
+from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
+from jsonrpc_framework.openrpc.document.external_docs._external_docs import (
+    _OpenRpcExternalDocTD,
+)
 from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
+from jsonrpc_framework.openrpc.document.method import OpenRpcMethod
+from jsonrpc_framework.openrpc.document.method._method import _OpenRpcMethodTD
+from jsonrpc_framework.openrpc.document.server import OpenRpcServer
+from jsonrpc_framework.openrpc.document.server._server import _OpenRpcServerTD
+
 
 def test_builder(
     openrpc_builder: OpenRpcBuilder,
