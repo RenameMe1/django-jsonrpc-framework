@@ -43,6 +43,10 @@ class ParseExcError(Exception): ...
 class InvalidRequestExcError(Exception): ...
 
 
-class AuthError(RpcError):
-    code: int = -32000
-    message: str = "Authentication error, credentials are incorrect"
+class UnauthorizedError(RpcError):
+    code: int = -32001
+    message: str = "Unauthorized"
+
+class ForbiddenError(RpcError):
+    code: int = -32002
+    message: str = "Forbidden"

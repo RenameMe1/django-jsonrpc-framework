@@ -1,5 +1,5 @@
 from ._base import AccessType
-from ._base import BaseAuthentication, BasePermission, AuthResult, run_auth, AccessPolicy
+from ._base import BaseAuthentication, BasePermission, AuthResult, run_auth, AccessPolicy, run_permissions
 
 __all__ = [
     "AccessType",
@@ -8,4 +8,5 @@ __all__ = [
     "AuthResult",
     "run_auth",
     "AccessPolicy",
+    "run_permissions",
 ]

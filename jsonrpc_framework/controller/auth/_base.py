@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from collections.abc import Sequence
+from collections.abc import Sequence, Callable
 from typing import Protocol, Any, assert_never, Final
 from dataclasses import dataclass
 
@@ -48,10 +48,16 @@ class BaseAuthentication(Protocol):
         ...
 
 
-class BasePermission: ...
+class BasePermission(Protocol):
+    def has_permission(access_policy: AccessPolicy, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]) -> bool:
+        """
+        Return True if the user has permission to access the handler, otherwise return False.
+        """
+        ...
 
 
 ANONYMOUS_AUTH: Final = AuthResult(auth_result=None, credentials_present=False, backend_used=None)
+
 
 @dataclass
 class AccessPolicy:
@@ -65,13 +71,13 @@ def run_auth(access_policy: AccessPolicy, request: HttpRequest) -> AuthResult | 
     if access_policy.access == AccessType.PUBLIC:
         return ANONYMOUS_AUTH
     elif access_policy.access == AccessType.OPTIONAL:
-        return handle_optional_access(request, access_policy.auth)
+        return _handle_optional_access(request, access_policy.auth)
     elif access_policy.access == AccessType.PRIVATE:
-        return handle_private_access()
+        return _handle_private_access(request, access_policy.auth)
     else:
         assert_never(AccessPolicy.access)
 
-def handle_optional_access(
+def _handle_optional_access(
     request: HttpRequest,
     auth_backends: Sequence[type[BaseAuthentication]],
     ) -> AuthResult | None:
@@ -98,7 +104,7 @@ def handle_optional_access(
     return None
 
 
-def handle_private_access(
+def _handle_private_access(
     request: HttpRequest,
     auth_backends: Sequence[type[BaseAuthentication]],
     ) -> AuthResult | None:
@@ -110,3 +116,20 @@ def handle_private_access(
             return backend.authenticate(request)
 
     return None
+
+
+def run_permissions(access_policy: AccessPolicy, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]) -> bool:
+
+    if access_policy.access == AccessType.PUBLIC:
+        return True
+    elif access_policy.access == AccessType.OPTIONAL and not auth_result.credentials_present:
+        return True
+
+
+    for backend in access_policy.permissions:
+        backend = backend()
+
+        if not backend.has_permission(request, auth_result, handler):
+            return False
+
+    return True

@@ -13,11 +13,12 @@ from jsonrpc_framework.core.error import (
     InternalError,
     MethodNotFoundError,
     InvalidParamsError,
-    AuthError,
+    UnauthorizedError,
+    ForbiddenError,
 )
 from jsonrpc_framework.core.models import SuccessResponse, ErrorResponse
 from jsonrpc_framework.core.models import Request, Notification
-from jsonrpc_framework.controller.auth import AccessPolicy, run_auth
+from jsonrpc_framework.controller.auth import AccessPolicy, run_auth, run_permissions
 
 
 type ResponseType = SuccessResponse | ErrorResponse | None
@@ -78,8 +79,16 @@ class RpcDispatcher:
         if auth_result is None:
             return ErrorResponse(
                 id=None,
-                error=AuthError(
+                error=UnauthorizedError(
                     data=f"Method {handler.__name__} is private and credentials are incorrect"
+                ),
+            )
+
+        if not run_permissions(access_policy, http_request, auth_result, handler):
+            return ErrorResponse(
+                id=None,
+                error=ForbiddenError(
+                    data=f"Forbidden access to method {handler.__name__}"
                 ),
             )
 
@@ -149,6 +158,7 @@ class RpcDispatcher:
         self,
         requests: BatchType,
         registry: dict[MethodType, HandlerType],
+        http_request: HttpRequest,
     ) -> BatchResponseType:
         batch_response: BatchResponseType = []
 
@@ -157,7 +167,7 @@ class RpcDispatcher:
                 batch_response.append(ErrorResponse(id=None, error=request))
                 continue
             else:
-                result = await self._dispatch_single(request, registry)
+                result = await self._dispatch_single(request, registry, http_request)
 
                 if result is not None:
                     batch_response.append(result)
