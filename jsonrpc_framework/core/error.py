@@ -47,6 +47,7 @@ class UnauthorizedError(RpcError):
     code: int = -32001
     message: str = "Unauthorized"
 
+
 class ForbiddenError(RpcError):
     code: int = -32002
     message: str = "Forbidden"

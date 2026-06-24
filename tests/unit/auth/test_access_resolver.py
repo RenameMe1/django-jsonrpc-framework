@@ -1,5 +1,9 @@
 from jsonrpc_framework.controller._base import BaseController
-from jsonrpc_framework.controller.auth import AccessType, BaseAuthentication, BasePermission
+from jsonrpc_framework.controller.auth import (
+    AccessType,
+    BaseAuthentication,
+    BasePermission,
+)
 from jsonrpc_framework.controller.decor import jsonrpc_method
 
 

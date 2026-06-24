@@ -16,7 +16,6 @@ async def test_batch_auth(
     user_bearer_token: str,
 ) -> None:
     class TestController(BaseController):
-
         default_access = AccessType.PRIVATE
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]

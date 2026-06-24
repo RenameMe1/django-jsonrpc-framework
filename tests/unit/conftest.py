@@ -50,7 +50,11 @@ def unsupported_version_request() -> bytes:
 
 @pytest.fixture
 def dispatcher() -> RpcDispatcher:
-    return RpcDispatcher(resolve_method_access=lambda func: AccessPolicy(access=AccessType.PUBLIC, auth=[], permissions=[]))
+    return RpcDispatcher(
+        resolve_method_access=lambda func: AccessPolicy(
+            access=AccessType.PUBLIC, auth=[], permissions=[]
+        )
+    )
 
 
 async def async_method() -> str:

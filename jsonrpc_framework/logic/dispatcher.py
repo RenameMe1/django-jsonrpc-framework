@@ -18,7 +18,12 @@ from jsonrpc_framework.core.error import (
 )
 from jsonrpc_framework.core.models import SuccessResponse, ErrorResponse
 from jsonrpc_framework.core.models import Request, Notification
-from jsonrpc_framework.controller.auth import AccessPolicy, run_auth, run_permissions, ANONYMOUS_AUTH
+from jsonrpc_framework.controller.auth import (
+    AccessPolicy,
+    run_auth,
+    run_permissions,
+    ANONYMOUS_AUTH,
+)
 
 
 type ResponseType = SuccessResponse | ErrorResponse | None
@@ -29,10 +34,11 @@ logger = logging.getLogger("django.server")
 
 
 class RpcDispatcher:
-
     resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]
 
-    def __init__(self, resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]):
+    def __init__(
+        self, resolve_method_access: Callable[[Callable[..., Any]], AccessPolicy]
+    ):
         self.resolve_method_access = resolve_method_access
 
     async def dispatch(
@@ -64,42 +70,39 @@ class RpcDispatcher:
 
         params = request.params
         method = request.method
+        result = None
 
         handler, bound = self._get_handler(method, params, registry)
 
         if isinstance(handler, RpcError):
-            if isinstance(request, Notification):
-                return ErrorResponse(id=None, error=handler)
-            else:
+            if isinstance(request, Request):
                 return ErrorResponse(id=request.id, error=handler)
+            else:
+                return None
 
         access_policy = self.resolve_method_access(handler)
         auth_result = await run_auth(access_policy, http_request)
 
         if auth_result is None:
-            return ErrorResponse(
-                id=None if isinstance(request, Notification) else request.id,
-                error=UnauthorizedError(
+            result = UnauthorizedError(
                     data=f"Method {request.method} is private and credentials are incorrect or not present"
-                ),
-            )
-
-        if auth_result != ANONYMOUS_AUTH:
-            if not await run_permissions(access_policy, http_request, auth_result, handler):
-                return ErrorResponse(
-                    id=None if isinstance(request, Notification) else request.id,
-                    error=ForbiddenError(
-                        data=f"Forbidden access to method {request.method}"
-                    ),
                 )
 
-        result = await self._call_handler(handler, bound)
+        if auth_result != ANONYMOUS_AUTH and auth_result is not None:
+            if not await run_permissions(
+                access_policy, http_request, auth_result, handler
+            ):
+                result = ForbiddenError(
+                    data=f"Forbidden access to method {request.method}"
+                )
 
-        if isinstance(result, RpcError):
-            id = None if isinstance(request, Notification) else request.id
-            return ErrorResponse(id=id, error=result)
+        if result is None:
+            result = await self._call_handler(handler, bound)
 
         if isinstance(request, Request):
+            if isinstance(result, RpcError):
+                id = None if isinstance(request, Notification) else request.id
+                return ErrorResponse(id=id, error=result)
             return SuccessResponse(id=request.id, result=result)
         else:
             return None

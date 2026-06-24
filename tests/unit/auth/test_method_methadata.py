@@ -2,7 +2,12 @@ import pytest
 
 from jsonrpc_framework.controller._base import BaseController
 from jsonrpc_framework.controller.decor import jsonrpc_method
-from jsonrpc_framework.controller.auth import AccessType, BaseAuthentication, BasePermission
+from jsonrpc_framework.controller.auth import (
+    AccessType,
+    BaseAuthentication,
+    BasePermission,
+)
+
 
 def test_method_metadata() -> None:
     """Test method metadata."""
@@ -29,6 +34,7 @@ def test_worng_access_type() -> None:
     """Test wrong access type."""
 
     with pytest.raises(ValueError):
+
         class TestController(BaseController):
             @jsonrpc_method(
                 "test",
@@ -36,6 +42,7 @@ def test_worng_access_type() -> None:
             )
             def test(self) -> str:
                 return "test"
+
 
 def test_not_set_access_type() -> None:
     """Test resolve default access."""

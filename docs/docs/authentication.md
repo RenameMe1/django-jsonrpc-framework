@@ -14,7 +14,7 @@ Methods has three private levels:
 > An OPTIONAL private level can expose your sensitive data. We created it for temporary use when you
 > need to make an existing method private without blocking front-end development.
 
-See below when occir authentification checks
+See below how get access to different private levels
 
 | Level     | Acess with credentials    | Acess without credentials | Acess with wrong credentials | 
 | :---      | :---:                     | :---:                      | :---:                         | 
@@ -43,8 +43,8 @@ See below when occur authorization checks
 | Level     |  with credentials    | without credentials | with wrong credentials | 
 | :---      | :---:                     | :---:                     | :---:                        | 
 | Public    | ❌                        | ❌                        | ❌                           |
-| Private   | ✅                        | ❌                        | ❌                           |
-| Optional  | ✅                        | ❌                        | ❌                           |
+| Private   | ✅                        | ✅                         | ✅                            |
+| Optional  | ✅                        | ❌                        | ✅                            |
 
 
 All authorization error, return a Forbidden error, see example below
@@ -54,7 +54,7 @@ All authorization error, return a Forbidden error, see example below
   "jsonrpc": "2.0",
   "id": 1,
   "error": {
-    "code": -32003,
+    "code": -32002,
     "message": "Forbidden",
     "data": "Forbidden access to method {__name__}"
   }
@@ -84,6 +84,8 @@ pip install django-jsonrpc-framework[jwt]
 ### Creating authentification backend
 
 The `BaseController` has possibility to set up authentification settings. You can create your own authorization backend, or use existing. Currenty ready only one backend - Bearer
+
+Bearer authentification expected header "Authorization" with "Bearer <token>" content
 
 
 Firstly we create a BearerToken model to validate token content, and create
@@ -286,3 +288,136 @@ class MethodAccess(BaseController):
 
 ### Batch support
 
+All batch specification supported.
+
+Every batch element authentification and authorization happen apart. One batch may contain as Success reposnses,
+default jsonrpc Error so Authorization and authentification error. See example below.
+
+```json
+[
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": 7    // Successful response: e.g. calling `sum` method with params [3, 4]
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "error": {
+      "code": -32601,
+      "message": "Method get_ntfund not found"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "error": {
+      "code": -32600,
+      "message": "Invalid Request"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": 4,
+    "error": {
+      "code": -32001,
+      "message": "Unauthorized",
+      "data": "Method get_smth is private and credentials are incorrect or not present"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": 5,
+    "error": {
+      "code": -32002,
+      "message": "Forbidden",
+      "data": "Forbidden access to method update_smth"
+    }
+  }
+]
+```
+
+
+### Notification behavior
+
+According to the JSON-RPC specification, Notification requests do not return any response to the client, even in cases of authentication or authorization errors. No errors or results will be sent back for notifications, regardless of whether an error occurred during processing.
+
+This behavior is also supported within batch requests: notification elements in a batch will not produce any responses, including when authentication or authorization fails for those elements.
+
+### Creating your own backend
+
+To create your own authentification backends you must follow next protocol examples:
+
+``` python
+
+from django.http import HttpRequest
+from jsonrcp_framework.controller.auth import AuthResult
+
+class BaseAuthentication(Protocol):
+    def has_credentials(self, request: HttpRequest) -> bool:
+        """
+        Return True if user try to authenticate with this backend.
+        Return False if user not try to authenticate with this backend.
+        """
+        ...
+
+    def authenticate(self, request: HttpRequest) -> AuthResult | None:
+        """
+        If has_credentials returns True, this method must be called to authenticate the user.
+
+        Return AuthResult if the user is authenticated, otherwise return None.
+        """
+        ...
+
+
+class AsyncBaseAuthentication(Protocol):
+    async def has_credentials(self, request: HttpRequest) -> bool:
+        """
+        Return True if user try to authenticate with this backend.
+        Return False if user not try to authenticate with this backend.
+        """
+        ...
+
+    async def authenticate(self, request: HttpRequest) -> AuthResult | None:
+        """
+        If has_credentials returns True, this method must be called to authenticate the user.
+
+        Return AuthResult if the user is authenticated, otherwise return None.
+        """
+        ...
+
+```
+
+Permission backends look like
+
+
+``` python
+
+from django.http import HttpRequest
+from jsonrcp_framework.controller.auth import AuthResult, AccessPolicy
+
+class BasePermission(Protocol):
+    def has_permission(
+        access_policy: AccessPolicy,
+        request: HttpRequest,
+        auth_result: AuthResult,
+        handler: Callable[..., Any],
+    ) -> bool:
+        """
+        Return True if the user has permission to access the handler, otherwise return False.
+        """
+        ...
+
+
+class AsyncBasePermission(Protocol):
+    async def has_permission(
+        access_policy: AccessPolicy,
+        request: HttpRequest,
+        auth_result: AuthResult,
+        handler: Callable[..., Any],
+    ) -> bool:
+        """
+        Return True if the user has permission to access the handler, otherwise return False.
+        """
+        ...
+```

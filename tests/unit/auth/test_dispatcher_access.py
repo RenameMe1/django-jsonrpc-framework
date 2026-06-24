@@ -1,7 +1,7 @@
 import pytest
 
 from jsonrpc_framework.controller._base import BaseController
-from jsonrpc_framework.controller.auth import AccessType, BaseAuthentication, BasePermission
+from jsonrpc_framework.controller.auth import AccessType
 from jsonrpc_framework.controller.decor import jsonrpc_method
 from jsonrpc_framework.core.models import Request
 from django.http import HttpRequest
@@ -17,7 +17,6 @@ async def test_dispatcher_access_invalid_credentials(
     invalid_bearer_token: str,
 ) -> None:
     class TestController(BaseController):
-
         default_access = AccessType.PRIVATE
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]
@@ -61,12 +60,10 @@ async def test_dispatcher_access_invalid_credentials(
     assert private_response.error.message == UnauthorizedError().message
 
 
-
 async def test_dispatcher_access_valid_credentials(
     admin_bearer_token: str,
 ) -> None:
     class TestController(BaseController):
-
         default_access = AccessType.PRIVATE
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]
@@ -110,7 +107,6 @@ async def test_dispatcher_access_valid_credentials(
 
 async def test_dispatcher_access_without_credentials() -> None:
     class TestController(BaseController):
-
         default_access = AccessType.PRIVATE
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]
@@ -156,7 +152,6 @@ async def test_dispatcher_access_with_permissions(
     user_bearer_token: str,
 ) -> None:
     class TestController(BaseController):
-
         default_access = AccessType.PRIVATE
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]

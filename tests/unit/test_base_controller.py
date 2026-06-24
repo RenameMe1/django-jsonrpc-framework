@@ -1,9 +1,9 @@
-from re import A
 import pytest
 
 from jsonrpc_framework.controller._base import BaseController
 from jsonrpc_framework.controller.decor import jsonrpc_method
 from jsonrpc_framework.controller.auth import AccessType
+
 
 def test_collect_declared_methods() -> None:
     """Test default method names collection."""
@@ -128,11 +128,11 @@ def test_decorator_openrpc_metadata_without_alias() -> None:
     assert getattr(handler, "__rpc_method_permissions__", None) is None
 
 
-
 def test_unexpected_access_type() -> None:
     """Test raising error on unexpected access type."""
 
     with pytest.raises(ValueError):
+
         class TestController(BaseController):
             @jsonrpc_method(access="public")
             def method_other(self) -> str:

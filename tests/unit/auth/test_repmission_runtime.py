@@ -1,11 +1,11 @@
 import pytest
 from jsonrpc_framework.controller._base import BaseController
-from jsonrpc_framework.controller.auth import AccessType, run_auth, ANONYMOUS_AUTH, AuthResult, INVALID_AUTH
+from jsonrpc_framework.controller.auth import AccessType
 from jsonrpc_framework.controller.decor import jsonrpc_method
-from jsonrpc_framework.core.models import Request, SuccessResponse
+from jsonrpc_framework.core.models import Request
 
-from django.http import HttpRequest, request
-from .conftest import BearerAuth, BearerToken, AdminPermission, AsyncBearerAuth, AsyncAdminPermission
+from django.http import HttpRequest
+from .conftest import BearerAuth, AdminPermission
 
 pytestmark = pytest.mark.asyncio
 
@@ -13,12 +13,14 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+
 @pytest.fixture
 def mocked_permission_backend(monkeypatch):
-    with patch("jsonrpc_framework.logic.dispatcher.run_permissions", autospec=True) as mock_perm:
+    with patch(
+        "jsonrpc_framework.logic.dispatcher.run_permissions", autospec=True
+    ) as mock_perm:
         mock_perm.return_value = True
         yield mock_perm
-   
 
 
 async def test_permission_runtime(
@@ -26,7 +28,6 @@ async def test_permission_runtime(
     mocked_permission_backend: MagicMock,
 ) -> None:
     class TestController(BaseController):
-
         auth_backends = [BearerAuth]
         permission_backends = [AdminPermission]
 
@@ -42,8 +43,6 @@ async def test_permission_runtime(
         def private(self) -> str:
             return "test"
 
-
-
     controller = TestController()
 
     http_request = HttpRequest()
@@ -53,7 +52,6 @@ async def test_permission_runtime(
     public_request = Request(id=1, method="public")
     optional_request = Request(id=1, method="optional")
     private_request = Request(id=1, method="private")
-
 
     public_response = await controller.dispatcher.dispatch(
         http_request=http_request,

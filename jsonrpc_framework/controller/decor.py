@@ -103,7 +103,9 @@ def jsonrpc_method(
             name_or_func,
             name=name_or_func,
             summary=summary,
-            description=description if description is not None else name_or_func.__doc__,
+            description=description
+            if description is not None
+            else name_or_func.__doc__,
             tags=tags,
             access=access,
             auth=auth,

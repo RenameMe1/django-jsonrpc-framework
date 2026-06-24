@@ -9,7 +9,9 @@ from typing import Awaitable
 try:
     import jwt
 except ImportError:
-    raise ImportError("PyJWT is not installed, please install it with `pip install django-jsonrpc-framework[jwt]`") from None
+    raise ImportError(
+        "PyJWT is not installed, please install it with `pip install django-jsonrpc-framework[jwt]`"
+    ) from None
 
 
 TokenT = TypeVar("TokenT", bound=BaseModel)
@@ -38,7 +40,7 @@ class BearerAuthentication(Generic[TokenT]):
 
         try:
             token_data = self.token_model.model_validate(payload)
-        except ValidationError as e:
+        except ValidationError:
             return INVALID_AUTH
 
         return AuthResult(
@@ -46,6 +48,7 @@ class BearerAuthentication(Generic[TokenT]):
             credentials_present=True,
             backend_used=self.name,
         )
+
 
 class AsyncBearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
@@ -70,7 +73,7 @@ class AsyncBearerAuthentication(Generic[TokenT]):
 
         try:
             token_data = self.token_model.model_validate(payload)
-        except ValidationError as e:
+        except ValidationError:
             return INVALID_AUTH
 
         return AuthResult(
@@ -78,6 +81,7 @@ class AsyncBearerAuthentication(Generic[TokenT]):
             credentials_present=True,
             backend_used=self.name,
         )
+
 
 class BearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
@@ -102,7 +106,7 @@ class BearerAuthentication(Generic[TokenT]):
 
         try:
             token_data = self.token_model.model_validate(payload)
-        except ValidationError as e:
+        except ValidationError:
             return INVALID_AUTH
 
         return AuthResult(
@@ -117,7 +121,9 @@ class BearerPermission(Generic[TokenT]):
     permission_checker: Callable[[TokenT, HttpRequest], bool]
     name: str
 
-    def has_permission(self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]) -> bool:
+    def has_permission(
+        self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]
+    ) -> bool:
         return self.permission_checker(auth_result.auth_result)
 
 
@@ -126,9 +132,10 @@ class AsyncBearerPermission(Generic[TokenT]):
     permission_checker: Callable[[TokenT, HttpRequest], bool]
     name: str
 
-    async def has_permission(self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]) -> bool:
+    async def has_permission(
+        self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]
+    ) -> bool:
         return await self.permission_checker(auth_result.auth_result)
-
 
 
 def make_bearer_auth_backend(

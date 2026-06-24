@@ -11,7 +11,12 @@ from jsonrpc_framework.logic.responser import ResponseBuilder
 
 from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.core.models import MethodType
-from jsonrpc_framework.controller.auth import AccessType, BasePermission, BaseAuthentication, AccessPolicy
+from jsonrpc_framework.controller.auth import (
+    AccessType,
+    BasePermission,
+    BaseAuthentication,
+    AccessPolicy,
+)
 
 
 logger = logging.getLogger("django.server")
@@ -42,7 +47,9 @@ class BaseController(View):
 
         self.registry = self._collect_declared_methods()
 
-        self.dispatcher = RpcDispatcher(resolve_method_access=self._resolve_method_access)
+        self.dispatcher = RpcDispatcher(
+            resolve_method_access=self._resolve_method_access
+        )
         self.validator = RequestValidator()
         self.response_builder = ResponseBuilder()
 
@@ -73,12 +80,18 @@ class BaseController(View):
         return registry
 
     def _set_auth_metadata(self, func: Callable[..., Any]) -> None:
-        func.__rpc_method_access__ = getattr(func, "__rpc_method_access__", AccessType._NOT_SET)
-        func.__rpc_method_auth__ = getattr(func, "__rpc_method_auth__", self.auth_backends)
-        func.__rpc_method_permissions__ = getattr(func, "__rpc_method_permissions__", self.permission_backends)
+        func.__rpc_method_access__ = getattr(
+            func, "__rpc_method_access__", AccessType._NOT_SET
+        )
+        func.__rpc_method_auth__ = getattr(
+            func, "__rpc_method_auth__", self.auth_backends
+        )
+        func.__rpc_method_permissions__ = getattr(
+            func, "__rpc_method_permissions__", self.permission_backends
+        )
 
     def _resolve_method_access(self, func: Callable[..., Any]) -> AccessPolicy:
-        
+
         access = getattr(func, "__rpc_method_access__", None)
         auth = getattr(func, "__rpc_method_auth__", None)
         permissions = getattr(func, "__rpc_method_permissions__", None)
@@ -95,7 +108,6 @@ class BaseController(View):
 
         return AccessPolicy(access=access, auth=auth, permissions=permissions)
 
-
     async def post(
         self,
         request: HttpRequest,
@@ -104,7 +116,9 @@ class BaseController(View):
     ) -> HttpResponse:
         body = self.validator.validate_body(request.body)
 
-        result = await self.dispatcher.dispatch(body, registry=self.registry, http_request=request)
+        result = await self.dispatcher.dispatch(
+            body, registry=self.registry, http_request=request
+        )
         self._log_jsonrpc_methods(request, body)
 
         return self.response_builder.build_response(result)
