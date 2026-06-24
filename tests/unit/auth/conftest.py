@@ -68,47 +68,6 @@ def user_bearer_token() -> str:
         algorithm="HS256",
     )
 
-class AsyncBearerAuthentication(Generic[TokenT]):
-    token_model: type[TokenT]
-    decode_token: Callable[[str], dict[str, Any]]
-    name: str
-
-    async def has_credentials(self, request: HttpRequest) -> bool:
-        return request.headers.get("Authorization", "").startswith("Bearer ")
-
-    async def authenticate(self, request: HttpRequest) -> AuthResult | None:
-        auth = request.headers.get("Authorization", "")
-        token = auth.removeprefix("Bearer ").strip()
-
-        if token is None:
-            return INVALID_AUTH
-
-        payload = await self.decode_token(token)
-
-        if payload is None:
-            return INVALID_AUTH
-
-        try:
-            token_data = self.token_model.model_validate(payload)
-        except ValidationError as e:
-            return INVALID_AUTH
-
-        return AuthResult(
-            auth_result=token_data,
-            credentials_present=True,
-            backend_used=self.name,
-        )
-
-
-class AsyncBearerPermission(Generic[TokenT]):
-    token_model: type[TokenT]
-    permission_checker: Callable[[TokenT, HttpRequest], bool]
-    name: str
-
-    async def has_permission(self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]) -> bool:
-        return await self.permission_checker(auth_result.auth_result, request)
-
-
 async def async_jwt_decode(token: str) -> dict[str, Any]:
     return jwt.decode(token, key=test_secret, algorithms=["HS256"])
 

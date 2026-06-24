@@ -47,6 +47,38 @@ class BearerAuthentication(Generic[TokenT]):
             backend_used=self.name,
         )
 
+class AsyncBearerAuthentication(Generic[TokenT]):
+    token_model: type[TokenT]
+    decode_token: Awaitable[Callable[[str], dict[str, Any]]]
+    name: str
+
+    async def has_credentials(self, request: HttpRequest) -> bool:
+        return request.headers.get("Authorization", "").startswith("Bearer ")
+
+    async def authenticate(self, request: HttpRequest) -> AuthResult | None:
+        print("asdasdasdasdsadasds")
+        auth = request.headers.get("Authorization", "")
+        token = auth.removeprefix("Bearer ").strip()
+
+        if token is None:
+            return INVALID_AUTH
+
+        payload = await self.decode_token(token)
+
+        if payload is None:
+            return INVALID_AUTH
+
+        try:
+            token_data = self.token_model.model_validate(payload)
+        except ValidationError as e:
+            return INVALID_AUTH
+
+        return AuthResult(
+            auth_result=token_data,
+            credentials_present=True,
+            backend_used=self.name,
+        )
+
 class BearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
     decode_token: Callable[[str], dict[str, Any]]
@@ -63,7 +95,7 @@ class BearerAuthentication(Generic[TokenT]):
         if token is None:
             return INVALID_AUTH
 
-        payload = await self.decode_token(token)
+        payload = self.decode_token(token)
 
         if payload is None:
             return INVALID_AUTH

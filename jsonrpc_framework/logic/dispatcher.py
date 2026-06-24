@@ -80,7 +80,7 @@ class RpcDispatcher:
             return ErrorResponse(
                 id=None if isinstance(request, Notification) else request.id,
                 error=UnauthorizedError(
-                    data=f"Method {handler.__name__} is private and credentials are incorrect or not present"
+                    data=f"Method {request.method} is private and credentials are incorrect or not present"
                 ),
             )
 
@@ -89,7 +89,7 @@ class RpcDispatcher:
                 return ErrorResponse(
                     id=None if isinstance(request, Notification) else request.id,
                     error=ForbiddenError(
-                        data=f"Forbidden access to method {handler.__name__}"
+                        data=f"Forbidden access to method {request.method}"
                     ),
                 )
 
