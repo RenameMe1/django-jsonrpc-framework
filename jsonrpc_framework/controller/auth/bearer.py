@@ -21,9 +21,12 @@ TokenT = TypeVar("TokenT", bound=BaseModel)
 type AsyncPermissionChecker = Callable[[TokenT, HttpRequest], Awaitable[bool]]
 type PermissionChecker = Callable[[TokenT, HttpRequest], bool]
 
+type TokenDecoder = Callable[[str], dict[str, Any]]
+type AsyncTokenDecoder = Callable[[str], Awaitable[dict[str, Any]]]
+
 class BearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
-    decode_token: Callable[[str], dict[str, Any]]
+    decode_token: TokenDecoder
     name: str
 
     def has_credentials(self, request: HttpRequest) -> bool:
@@ -56,7 +59,7 @@ class BearerAuthentication(Generic[TokenT]):
 
 class AsyncBearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
-    decode_token: Awaitable[Callable[[str], dict[str, Any]]]
+    decode_token: AsyncTokenDecoder
     name: str
 
     async def has_credentials(self, request: HttpRequest) -> bool:
@@ -89,7 +92,7 @@ class AsyncBearerAuthentication(Generic[TokenT]):
 
 class BearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
-    decode_token: Callable[[str], dict[str, Any]]
+    decode_token: TokenDecoder
     name: str
 
     async def has_credentials(self, request: HttpRequest) -> bool:
@@ -145,7 +148,7 @@ class AsyncBearerPermission(Generic[TokenT]):
 def make_bearer_auth_backend(
     *,
     token_model: type[TokenT],
-    token_decoder: Callable[[str], dict[str, Any]],
+    token_decoder: TokenDecoder,
 ) -> type[BearerAuthentication[TokenT]]:
 
     class _Backend(BearerAuthentication[TokenT]):
@@ -177,7 +180,7 @@ def make_permission_backend(
 def make_async_bearer_auth_backend(
     *,
     token_model: type[TokenT],
-    token_decoder: Awaitable[Callable[[str], dict[str, Any]]],
+    token_decoder: AsyncTokenDecoder,
 ) -> type[AsyncBearerAuthentication[TokenT]]:
     class _Backend(AsyncBearerAuthentication[TokenT]):
         pass
