@@ -18,6 +18,8 @@ except ImportError:
 TokenT = TypeVar("TokenT", bound=BaseModel)
 
 
+type AsyncPermissionChecker = Callable[[TokenT, HttpRequest], Awaitable[bool]]
+
 class BearerAuthentication(Generic[TokenT]):
     token_model: type[TokenT]
     decode_token: Callable[[str], dict[str, Any]]
@@ -130,7 +132,7 @@ class BearerPermission(Generic[TokenT]):
 
 class AsyncBearerPermission(Generic[TokenT]):
     token_model: type[TokenT]
-    permission_checker: Callable[[TokenT, HttpRequest], bool]
+    permission_checker: AsyncPermissionChecker
     name: str
 
     async def has_permission(
@@ -189,7 +191,7 @@ def make_async_bearer_auth_backend(
 def make_async_permission_backend(
     *,
     token_model: type[TokenT],
-    permission_checker: Awaitable[Callable[[TokenT, HttpRequest], bool]],
+    permission_checker: AsyncPermissionChecker,
 ) -> type[AsyncBearerPermission[TokenT]]:
     class _Permission(AsyncBearerPermission[TokenT]):
         pass
