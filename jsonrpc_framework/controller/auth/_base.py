@@ -71,10 +71,10 @@ class AsyncBaseAuthentication(Protocol):
 
 class BasePermission(Protocol):
     def has_permission(
+        self,
         access_policy: AccessPolicy,
         request: HttpRequest,
         auth_result: AuthResult,
-        handler: Callable[..., Any],
     ) -> bool:
         """
         Return True if the user has permission to access the handler, otherwise return False.
@@ -84,10 +84,10 @@ class BasePermission(Protocol):
 
 class AsyncBasePermission(Protocol):
     async def has_permission(
+        self,
         access_policy: AccessPolicy,
         request: HttpRequest,
         auth_result: AuthResult,
-        handler: Callable[..., Any],
     ) -> bool:
         """
         Return True if the user has permission to access the handler, otherwise return False.
@@ -195,7 +195,6 @@ async def run_permissions(
     access_policy: AccessPolicy,
     request: HttpRequest,
     auth_result: AuthResult,
-    handler: Callable[..., Any],
 ) -> bool:
 
     if access_policy.access == AccessType.PUBLIC:
@@ -210,9 +209,9 @@ async def run_permissions(
         backend = backend()
 
         if iscoroutinefunction(backend.has_permission):
-            has_permission = await backend.has_permission(request, auth_result, handler)
+            has_permission = await backend.has_permission(access_policy, request, auth_result)
         else:
-            has_permission = backend.has_permission(request, auth_result, handler)
+            has_permission = backend.has_permission(access_policy, request, auth_result)
 
         if not has_permission:
             return False

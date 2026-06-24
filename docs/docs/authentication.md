@@ -8,7 +8,7 @@ Methods has three private levels:
 
 - **PUBLIC** (Default to controller): Ordinary public method, always glad to return result
 - **PRIVATE**: Ordinary private controller, return result only if authentification and authorization cheks is successful
-- **OPTIONAL**: Specical level. If request don't have credentials make method PUBLIC, if request have credentials make method PRIVATE
+- **OPTIONAL**: Specical level. If request don't have credentials make method PUBLIC (anonymous), if request have credentials make method PRIVATE
 
 > [!WARNING]
 > An OPTIONAL private level can expose your sensitive data. We created it for temporary use when you
@@ -72,6 +72,8 @@ If you use several or empty auth and authorize backend, this table will be helpf
 | Authentification  | ✅         | ✅                       | ❌         |         ❌          |
 | Authorization     | ✅         | ❌                       | ❌         |         ✅          |
 
+We can see authentification use OR, authorization use AND
+
 ### install with JWT support
 
 Install extras to enable support JWT
@@ -85,7 +87,7 @@ pip install django-jsonrpc-framework[jwt]
 
 The `BaseController` has possibility to set up authentification settings. You can create your own authorization backend, or use existing. Currenty ready only one backend - Bearer
 
-Bearer authentification expected header "Authorization" with "Bearer <token>" content
+Bearer authentification expected header "Authorization" with "Bearer <token>" content, any mistake will be raise Unauthorize error.
 
 
 Firstly we create a BearerToken model to validate token content, and create
@@ -115,7 +117,7 @@ async def async_jwt_decoder(token: str) -> dict[str, Any] | None:
 
 ```
 
-After that we create a authentification backend using a factory: `make_bearer_auth_backend` - to sync implementation, `make_async_bearer_auth_backend` - to async implementation. We create both to learning goal.
+After that we create a authentification backend using a factory: `make_bearer_auth_backend` - to sync implementation, `make_async_bearer_auth_backend` - to async implementation. We create both to learning goal. Controller support both type (sync & async) backend in same type.
 
 
 ```python
@@ -388,6 +390,10 @@ class AsyncBaseAuthentication(Protocol):
 
 ```
 
+>[WARNING]
+> Be careful while implementation `has_credential`, if you used OPTIONAL permission level,
+> mistake inside this method can open anonimous access to method.
+
 Permission backends look like
 
 
@@ -398,10 +404,10 @@ from jsonrcp_framework.controller.auth import AuthResult, AccessPolicy
 
 class BasePermission(Protocol):
     def has_permission(
+        self,
         access_policy: AccessPolicy,
         request: HttpRequest,
         auth_result: AuthResult,
-        handler: Callable[..., Any],
     ) -> bool:
         """
         Return True if the user has permission to access the handler, otherwise return False.
@@ -411,13 +417,17 @@ class BasePermission(Protocol):
 
 class AsyncBasePermission(Protocol):
     async def has_permission(
+        self,
         access_policy: AccessPolicy,
         request: HttpRequest,
         auth_result: AuthResult,
-        handler: Callable[..., Any],
     ) -> bool:
         """
         Return True if the user has permission to access the handler, otherwise return False.
         """
         ...
 ```
+
+
+>[Warning]
+>Supress all expected exceptions in backends to get a False result. Runner don't handle backends >exception as False result

@@ -5,6 +5,7 @@ from pydantic import BaseModel, ValidationError
 from jsonrpc_framework.controller.auth import AuthResult, INVALID_AUTH
 from django.http import HttpRequest
 from typing import Awaitable
+from jsonrpc_framework.controller.auth import AccessPolicy
 
 try:
     import jwt
@@ -122,7 +123,7 @@ class BearerPermission(Generic[TokenT]):
     name: str
 
     def has_permission(
-        self, request: HttpRequest, auth_result: AuthResult, handler: Callable[..., Any]
+        self, access_policy: AccessPolicy, request: HttpRequest, auth_result: AuthResult
     ) -> bool:
         return self.permission_checker(auth_result.auth_result)
 
