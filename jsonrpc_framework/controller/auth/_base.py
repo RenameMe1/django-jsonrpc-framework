@@ -38,8 +38,8 @@ class AuthResult:
 class BaseAuthentication(Protocol):
     def has_credentials(self, request: HttpRequest) -> bool:
         """
-        Return True if user try to authenticate with this backend.
-        Return False if user not try to authenticate with this backend.
+        Return True if the user tries to authenticate with this backend.
+        Return False if the user does not try to authenticate with this backend.
         """
         ...
 
@@ -55,8 +55,8 @@ class BaseAuthentication(Protocol):
 class AsyncBaseAuthentication(Protocol):
     async def has_credentials(self, request: HttpRequest) -> bool:
         """
-        Return True if user try to authenticate with this backend.
-        Return False if user not try to authenticate with this backend.
+        Return True if the user tries to authenticate with this backend.
+        Return False if the user does not try to authenticate with this backend.
         """
         ...
 

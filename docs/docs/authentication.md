@@ -1,30 +1,30 @@
-# Authentication & Autorization
+# Authentication & Authorization
 
 ## Authentication
 
-### Authentification levels
+### Authentication levels
 
-Methods has three private levels:
+Methods have three access levels:
 
-- **PUBLIC** (Default to controller): Ordinary public method, always glad to return result
-- **PRIVATE**: Ordinary private controller, return result only if authentification and authorization cheks is successful
-- **OPTIONAL**: Specical level. If request don't have credentials make method PUBLIC (anonymous), if request have credentials make method PRIVATE
+- **PUBLIC** (default for controller): Ordinary public method, always returns a result
+- **PRIVATE**: Ordinary private method, returns a result only if authentication and authorization checks are successful
+- **OPTIONAL**: Special level. If a request does not have credentials, the method behaves as PUBLIC (anonymous); if a request has credentials, the method behaves as PRIVATE
 
 > [!WARNING]
 > An OPTIONAL private level can expose your sensitive data. We created it for temporary use when you
 > need to make an existing method private without blocking front-end development.
 
-See below how get access to different private levels
+See below how to get access to different access levels.
 
-| Level     | Acess with credentials    | Acess without credentials | Acess with wrong credentials | 
+| Level     | Access with credentials    | Access without credentials | Access with wrong credentials | 
 | :---      | :---:                     | :---:                      | :---:                         | 
 | Public    | ✅                        | ✅                        | ✅                            |
 | Private   | ✅                        | ❌                        | ❌                            |
 | Optional  | ✅                        | ✅                        | ❌                            |
 
-### Authentification & Authorization matrix
+### Authentication & Authorization matrix
 
-All authorize error, return Unathorized error, see example below
+All authentication errors return an Unauthorized error; see the example below.
 
 ```json
 {
@@ -38,7 +38,7 @@ All authorize error, return Unathorized error, see example below
 }
 ```
 
-See below when occur authorization checks
+See below when authorization checks occur.
 
 | Level     |  with credentials    | without credentials | with wrong credentials | 
 | :---      | :---:                     | :---:                     | :---:                        | 
@@ -47,7 +47,7 @@ See below when occur authorization checks
 | Optional  | ✅                        | ❌                        | ✅                            |
 
 
-All authorization error, return a Forbidden error, see example below
+All authorization errors return a Forbidden error; see the example below.
 
 ```json
 {
@@ -63,35 +63,34 @@ All authorization error, return a Forbidden error, see example below
 ```
 
 
-### Checks 
+### Checks
 
-If you use several or empty auth and authorize backend, this table will be helpful to understading what going on.
+If you use several auth or permission backends (or an empty list), this table helps to understand what is going on.
 
-| Level             | All passed | One passed Other fauled | All Failed | empty backends list |
+| Level             | All passed | One passed, other failed | All failed | Empty backends list |
 | :---              | :---:      | :---:                    | :---:     |  :---:              |
-| Authentification  | ✅         | ✅                       | ❌         |         ❌          |
+| Authentication    | ✅         | ✅                       | ❌         |         ❌          |
 | Authorization     | ✅         | ❌                       | ❌         |         ✅          |
 
-We can see authentification use OR, authorization use AND
+As you can see, authentication uses OR, while authorization uses AND.
 
-### install with JWT support
+### Install with JWT support
 
-Install extras to enable support JWT
+Install extras to enable JWT support.
 
 
 ```
 pip install django-jsonrpc-framework[jwt]
 ```
 
-### Creating authentification backend
+### Creating authentication backend
 
-The `BaseController` has possibility to set up authentification settings. You can create your own authorization backend, or use existing. Currenty ready only one backend - Bearer
+`BaseController` allows you to configure authentication settings. You can create your own authentication backend or use an existing one. Currently, only one backend is available: Bearer.
 
-Bearer authentification expected header "Authorization" with "Bearer <token>" content, any mistake will be raise Unauthorize error.
+Bearer authentication expects the `Authorization` header with `Bearer <token>` content. Any issue raises an Unauthorized error.
 
 
-Firstly we create a BearerToken model to validate token content, and create
-a function to decode our token
+First, create a `BearerToken` model to validate token content and a function to decode the token.
 
 
 ``` python
@@ -117,7 +116,7 @@ async def async_jwt_decoder(token: str) -> dict[str, Any] | None:
 
 ```
 
-After that we create a authentification backend using a factory: `make_bearer_auth_backend` - to sync implementation, `make_async_bearer_auth_backend` - to async implementation. We create both to learning goal. Controller support both type (sync & async) backend in same type.
+After that, create an authentication backend using a factory: `make_bearer_auth_backend` for sync implementation, `make_async_bearer_auth_backend` for async implementation. We create both for learning purposes. A controller supports both backend types (sync and async) at the same time.
 
 
 ```python
@@ -135,7 +134,7 @@ AsyncAuthBackend = make_async_bearer_auth_backend(
 
 
 
-After preparing our authentification backend, we can use its to BaseControllers
+After preparing authentication backends, we can use them in `BaseController`.
 
 ``` python
 
@@ -154,12 +153,12 @@ request.
 > Currently, there is no support for requiring approval from all specified auth_backends. Access to a private method is granted if at least one of the provided auth_backends successfully authenticates the request.
 
 > [!WARNING]
-> Authentification checks use in order their structure. If you use `list` or `tuple` auth backend will be execute from 0 to .... If you use other Sequence structures, please be sure you understand their elements order.
+> Authentication checks follow the order of the structure you provide. If you use `list` or `tuple`, auth backends are executed from index `0` onward. If you use other `Sequence` structures, make sure you understand their element order.
 
 
-Following step we need define private level on Controller level either method level.
+The next step is to define an access level either at controller level or at method level.
 
-Controller access level apply to all methods which doesn't have a its own permission level
+Controller access level applies to all methods that do not have their own permission level.
 
 ``` python
 
@@ -188,8 +187,7 @@ class MethodAccess(BaseController):
 ```
 
 
-Also you can set up method specific authentification backends, method authentification backends
-rewrite Controller rules.
+You can also set up method-specific authentication backends; method authentication backends override controller rules.
 
 ``` python
 from jsonrpc_framework.controller.auth import AccessType
@@ -213,9 +211,9 @@ class MethodAccess(BaseController):
 
 ## Authorization
 
-Set up authorization looks like setup authentification.
+Authorization setup looks similar to authentication setup.
 
-Firstly we creaete a helper functions and create Permission backens using a factory: `make_permission_backend` - to sync backend and `make_async_permission_backend` to create async backend.
+First, create helper functions and permission backends using factories: `make_permission_backend` for a sync backend and `make_async_permission_backend` for an async backend.
 
 ``` python
 from pydantic import BaseModel
@@ -230,7 +228,7 @@ class BearerToken(BaseModel):
 def permission_checker(token: BearerToken) -> bool:
     return token.admin is True
 
-async def async_permission_cheker(token: BearerToken) -> bool:
+async def async_permission_checker(token: BearerToken) -> bool:
     return token.admin is True
 
 AdminPermission = make_permission_backend(
@@ -241,11 +239,11 @@ AdminPermission = make_permission_backend(
 
 AsyncAdminPermission = make_async_permission_backend(
     token_model=BearerToken,
-    permission_checker=async_permission_cheker,
+    permission_checker=async_permission_checker,
 )
 ```
 
-Next step add permittion backends to your Controller
+The next step is to add permission backends to your controller.
 
 
 ``` python
@@ -263,8 +261,7 @@ class ControllerAccess(BaseController):
 ```
 
 
-Also you can set up method specific authorization backends, method authorization backends
-rewrite Controller rules.
+You can also set up method-specific authorization backends; method authorization backends override controller rules.
 
 ``` python
 from jsonrpc_framework.controller.auth import AccessType
@@ -290,10 +287,9 @@ class MethodAccess(BaseController):
 
 ### Batch support
 
-All batch specification supported.
+The full batch specification is supported.
 
-Every batch element authentification and authorization happen apart. One batch may contain as Success reposnses,
-default jsonrpc Error so Authorization and authentification error. See example below.
+Authentication and authorization are performed independently for each batch element. One batch may contain successful responses, default JSON-RPC errors, authorization errors, and authentication errors. See the example below.
 
 ```json
 [
@@ -348,18 +344,18 @@ This behavior is also supported within batch requests: notification elements in 
 
 ### Creating your own backend
 
-To create your own authentification backends you must follow next protocol examples:
+To create your own authentication backends, follow the protocol examples below:
 
 ``` python
 
 from django.http import HttpRequest
-from jsonrcp_framework.controller.auth import AuthResult
+from jsonrpc_framework.controller.auth import AuthResult
 
 class BaseAuthentication(Protocol):
     def has_credentials(self, request: HttpRequest) -> bool:
         """
-        Return True if user try to authenticate with this backend.
-        Return False if user not try to authenticate with this backend.
+        Return True if the user tries to authenticate with this backend.
+        Return False if the user does not try to authenticate with this backend.
         """
         ...
 
@@ -375,8 +371,8 @@ class BaseAuthentication(Protocol):
 class AsyncBaseAuthentication(Protocol):
     async def has_credentials(self, request: HttpRequest) -> bool:
         """
-        Return True if user try to authenticate with this backend.
-        Return False if user not try to authenticate with this backend.
+        Return True if the user tries to authenticate with this backend.
+        Return False if the user does not try to authenticate with this backend.
         """
         ...
 
@@ -390,17 +386,17 @@ class AsyncBaseAuthentication(Protocol):
 
 ```
 
->[WARNING]
-> Be careful while implementation `has_credential`, if you used OPTIONAL permission level,
-> mistake inside this method can open anonimous access to method.
+> [!WARNING]
+> Be careful when implementing `has_credentials`: if you use OPTIONAL access level,
+> a mistake inside this method can open anonymous access to a method.
 
-Permission backends look like
+Permission backends look like this:
 
 
 ``` python
 
 from django.http import HttpRequest
-from jsonrcp_framework.controller.auth import AuthResult, AccessPolicy
+from jsonrpc_framework.controller.auth import AuthResult, AccessPolicy
 
 class BasePermission(Protocol):
     def has_permission(
@@ -429,5 +425,5 @@ class AsyncBasePermission(Protocol):
 ```
 
 
->[Warning]
->Supress all expected exceptions in backends to get a False result. Runner don't handle backends >exception as False result
+> [!WARNING]
+> Suppress all expected exceptions in backends to return `False`. The runner does not treat backend exceptions as `False` results.
