@@ -128,7 +128,7 @@ async def run_auth(
 
 async def _handle_optional_access(
     request: HttpRequest,
-    auth_backends: Sequence[type[BaseAuthentication]],
+    auth_backends: Sequence[type[BaseAuthentication] | type[AsyncBaseAuthentication]],
 ) -> AuthResult | None:
 
     print("start optional access \n")
@@ -159,7 +159,7 @@ async def _handle_optional_access(
 
 async def _handle_private_access(
     request: HttpRequest,
-    auth_backends: Sequence[type[BaseAuthentication]],
+    auth_backends: Sequence[type[BaseAuthentication] | type[AsyncBaseAuthentication]],
 ) -> AuthResult | None:
 
     for backend in auth_backends:
