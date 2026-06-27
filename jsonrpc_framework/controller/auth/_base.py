@@ -185,10 +185,12 @@ async def is_have_credentials(
 async def is_authenticate(
     backend: type[BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
 ) -> AuthResult | None:
-    if iscoroutinefunction(backend.authenticate):
-        return await backend.authenticate(request)
+    init_backend = backend()
+
+    if iscoroutinefunction(init_backend.authenticate):
+        return await init_backend.authenticate(request)
     else:
-        return backend.authenticate(request)
+        return init_backend.authenticate(request)
 
 
 async def run_permissions(
