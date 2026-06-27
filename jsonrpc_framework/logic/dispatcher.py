@@ -85,12 +85,14 @@ class RpcDispatcher:
 
         if auth_result is None:
             result = UnauthorizedError(
-                    data=f"Method {request.method} is private and credentials are incorrect or not present"
-                )
+                data=f"Method {request.method} is private and credentials are incorrect or not present"
+            )
 
         if auth_result != ANONYMOUS_AUTH and auth_result is not None:
             if not await run_permissions(
-                access_policy, http_request, auth_result,
+                access_policy,
+                http_request,
+                auth_result,
             ):
                 result = ForbiddenError(
                     data=f"Forbidden access to method {request.method}"

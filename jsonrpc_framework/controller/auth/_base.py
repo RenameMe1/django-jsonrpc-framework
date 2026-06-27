@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from collections.abc import Sequence, Callable, Awaitable
+from collections.abc import Sequence, Awaitable
 from typing import Protocol, Any, assert_never, Final
 from dataclasses import dataclass
 from inspect import iscoroutinefunction
-from unittest import result
 
 from django.http import HttpRequest
 
@@ -198,7 +197,6 @@ async def is_authenticate(
         return result
 
 
-
 async def run_permissions(
     access_policy: AccessPolicy,
     request: HttpRequest,
@@ -217,9 +215,13 @@ async def run_permissions(
         init_backend = backend()
 
         if iscoroutinefunction(init_backend.has_permission):
-            has_permission = await init_backend.has_permission(access_policy, request, auth_result)
+            has_permission = await init_backend.has_permission(
+                access_policy, request, auth_result
+            )
         else:
-            has_permission = init_backend.has_permission(access_policy, request, auth_result)
+            has_permission = init_backend.has_permission(
+                access_policy, request, auth_result
+            )
 
         if not has_permission:
             return False

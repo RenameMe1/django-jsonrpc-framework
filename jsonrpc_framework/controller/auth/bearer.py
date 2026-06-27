@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Callable, Any, ClassVar, Self, Protocol
+from typing import Generic, TypeVar, Any, ClassVar, Protocol
 
 from pydantic import BaseModel, ValidationError
 
@@ -17,20 +17,26 @@ except ImportError:
 
 TokenT = TypeVar("TokenT", bound=BaseModel)
 
+
 class AsyncPermissionCheckerType(Protocol):
-    def __call__(self, auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> Awaitable[bool]:
-        ...
+    def __call__(
+        self, auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy
+    ) -> Awaitable[bool]: ...
+
 
 class PermissionCheckerType(Protocol):
-    def __call__(self, auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> bool:
-        ...
+    def __call__(
+        self, auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy
+    ) -> bool: ...
+
 
 class TokenDecoderType(Protocol):
     def __call__(self, token: str) -> dict[str, Any]: ...
 
+
 class AsyncTokenDecoderType(Protocol):
-    def __call__(self, token: str) -> Awaitable[dict[str, Any]]:
-        ...
+    def __call__(self, token: str) -> Awaitable[dict[str, Any]]: ...
+
 
 class BearerAuthentication(Generic[TokenT]):
     token_model: ClassVar[type[TokenT]]

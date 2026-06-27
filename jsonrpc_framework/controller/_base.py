@@ -91,7 +91,6 @@ class BaseController(View):
         if method_permissions is None:
             func.__setattr__("__rpc_method_permissions__", self.permission_backends)
 
-
     def _resolve_method_access(self, func: Callable[..., Any]) -> AccessPolicy:
 
         access = getattr(func, "__rpc_method_access__", None)
@@ -106,7 +105,9 @@ class BaseController(View):
         if auth is None:
             auth = [] if self.auth_backends is None else self.auth_backends
         if permissions is None:
-            permissions = [] if self.permission_backends is None else self.permission_backends
+            permissions = (
+                [] if self.permission_backends is None else self.permission_backends
+            )
 
         return AccessPolicy(access=access, auth=auth, permissions=permissions)
 

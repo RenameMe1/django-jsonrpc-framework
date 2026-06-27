@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from jsonrpc_framework.controller._base import BaseController
 from jsonrpc_framework.controller.auth import AccessType
@@ -8,10 +10,6 @@ from django.http import HttpRequest
 from .conftest import BearerAuth, AdminPermission
 
 pytestmark = pytest.mark.asyncio
-
-from unittest.mock import MagicMock, patch
-
-import pytest
 
 
 @pytest.fixture
@@ -53,7 +51,7 @@ async def test_permission_runtime(
     optional_request = Request(id=1, method="optional")
     private_request = Request(id=1, method="private")
 
-    public_response = await controller.dispatcher.dispatch(
+    await controller.dispatcher.dispatch(
         http_request=http_request,
         body=public_request,
         registry=controller.registry,
@@ -62,7 +60,7 @@ async def test_permission_runtime(
     mocked_permission_backend.assert_not_called()
     mocked_permission_backend.reset_mock()
 
-    optional_response = await controller.dispatcher.dispatch(
+    await controller.dispatcher.dispatch(
         http_request=http_request,
         body=optional_request,
         registry=controller.registry,
@@ -71,7 +69,7 @@ async def test_permission_runtime(
     mocked_permission_backend.assert_called_once()
     mocked_permission_backend.reset_mock()
 
-    private_response = await controller.dispatcher.dispatch(
+    await controller.dispatcher.dispatch(
         http_request=http_request,
         body=private_request,
         registry=controller.registry,
