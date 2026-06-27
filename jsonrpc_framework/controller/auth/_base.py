@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from collections.abc import Sequence, Callable
+from collections.abc import Sequence, Callable, Awaitable
 from typing import Protocol, Any, assert_never, Final
 from dataclasses import dataclass
 from inspect import iscoroutinefunction
+from unittest import result
 
 from django.http import HttpRequest
 
@@ -119,6 +120,8 @@ async def run_auth(
         return await _handle_optional_access(request, access_policy.auth)
     elif access_policy.access == AccessType.PRIVATE:
         return await _handle_private_access(request, access_policy.auth)
+    elif access_policy.access == AccessType.NOT_SET:
+        return None
     else:
         assert_never(AccessPolicy.access)
 
@@ -134,8 +137,6 @@ async def _handle_optional_access(
     requested_backends = []
 
     for backend in auth_backends:
-        backend = backend()
-
         if await is_have_credentials(backend, request):
             has_credentials = True
             requested_backends.append(backend)
@@ -162,8 +163,6 @@ async def _handle_private_access(
 ) -> AuthResult | None:
 
     for backend in auth_backends:
-        backend = backend()
-
         if await is_have_credentials(backend, request):
             auth_result = await is_authenticate(backend, request)
 
@@ -178,10 +177,12 @@ async def is_have_credentials(
 ) -> bool:
     init_backend = backend()
 
-    if iscoroutinefunction(init_backend.has_credentials):
-        return await init_backend.has_credentials(request)
+    result = init_backend.has_credentials(request)
+
+    if isinstance(result, Awaitable):
+        return await result
     else:
-        return init_backend.has_credentials(request)
+        return result
 
 
 async def is_authenticate(
@@ -189,10 +190,13 @@ async def is_authenticate(
 ) -> AuthResult | None:
     init_backend = backend()
 
-    if iscoroutinefunction(init_backend.authenticate):
-        return await init_backend.authenticate(request)
+    result = init_backend.authenticate(request)
+
+    if isinstance(result, Awaitable):
+        return await result
     else:
-        return init_backend.authenticate(request)
+        return result
+
 
 
 async def run_permissions(
