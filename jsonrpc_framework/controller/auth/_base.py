@@ -113,17 +113,17 @@ async def run_auth(
     access_policy: AccessPolicy, request: HttpRequest
 ) -> AuthResult | None:
 
-    if access_policy.access == AccessType.PUBLIC:
-        return ANONYMOUS_AUTH
-    elif access_policy.access == AccessType.OPTIONAL:
-        print(access_policy.access)
-        return await _handle_optional_access(request, access_policy.auth)
-    elif access_policy.access == AccessType.PRIVATE:
-        return await _handle_private_access(request, access_policy.auth)
-    elif access_policy.access == AccessType.NOT_SET:
-        return None
-    else:
-        assert_never(AccessPolicy.access)
+    match access_policy.access:
+        case AccessType.PUBLIC:
+            return ANONYMOUS_AUTH
+        case AccessType.OPTIONAL:
+            return await _handle_optional_access(request, access_policy.auth)
+        case AccessType.PRIVATE:
+            return await _handle_private_access(request, access_policy.auth)
+        case AccessType._NOT_SET:
+            return None
+        case _:
+            assert_never(access_policy.access)
 
 
 async def _handle_optional_access(
