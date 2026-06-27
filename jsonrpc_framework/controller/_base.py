@@ -106,7 +106,7 @@ class BaseController(View):
         if auth is None:
             auth = self.auth_backends
         if permissions is None:
-            permissions = self.permission_backends
+            permissions = [] if self.permission_backends is None else self.permission_backends
 
         return AccessPolicy(access=access, auth=auth, permissions=permissions)
 
