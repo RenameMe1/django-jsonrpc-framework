@@ -104,7 +104,7 @@ class BaseController(View):
         if access is None:
             access = self.default_access
         if auth is None:
-            auth = self.auth_backends
+            auth = [] if self.auth_backends is None else self.auth_backends
         if permissions is None:
             permissions = [] if self.permission_backends is None else self.permission_backends
 

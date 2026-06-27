@@ -101,7 +101,7 @@ def jsonrpc_method(
     if callable(name_or_func):
         return parametrized_decorator(
             name_or_func,
-            name=name_or_func,
+            name=name_or_func.__name__,
             summary=summary,
             description=description
             if description is not None

@@ -206,12 +206,12 @@ async def run_permissions(
         return True
 
     for backend in access_policy.permissions:
-        backend = backend()
+        init_backend = backend()
 
-        if iscoroutinefunction(backend.has_permission):
-            has_permission = await backend.has_permission(access_policy, request, auth_result)
+        if iscoroutinefunction(init_backend.has_permission):
+            has_permission = await init_backend.has_permission(access_policy, request, auth_result)
         else:
-            has_permission = backend.has_permission(access_policy, request, auth_result)
+            has_permission = init_backend.has_permission(access_policy, request, auth_result)
 
         if not has_permission:
             return False

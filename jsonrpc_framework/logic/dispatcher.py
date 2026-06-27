@@ -70,7 +70,7 @@ class RpcDispatcher:
 
         params = request.params
         method = request.method
-        result = None
+        result: RpcError | Any | None = None
 
         handler, bound = self._get_handler(method, params, registry)
 
