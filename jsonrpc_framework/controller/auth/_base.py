@@ -176,10 +176,12 @@ async def _handle_private_access(
 async def is_have_credentials(
     backend: type[BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
 ) -> bool:
-    if iscoroutinefunction(backend.has_credentials):
-        return await backend.has_credentials(request)
+    init_backend = backend()
+
+    if iscoroutinefunction(init_backend.has_credentials):
+        return await init_backend.has_credentials(request)
     else:
-        return backend.has_credentials(request)
+        return init_backend.has_credentials(request)
 
 
 async def is_authenticate(
