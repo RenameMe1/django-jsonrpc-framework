@@ -38,7 +38,7 @@ BearerAuth = make_bearer_auth_backend(
 )
 
 
-def permission_checker(token: BearerToken) -> bool:
+def permission_checker(token: BearerToken, request: HttpRequest) -> bool:
     return token.admin is True
 
 

@@ -80,15 +80,17 @@ class BaseController(View):
         return registry
 
     def _set_auth_metadata(self, func: Callable[..., Any]) -> None:
-        func.__rpc_method_access__ = getattr(
-            func, "__rpc_method_access__", AccessType._NOT_SET
-        )
-        func.__rpc_method_auth__ = getattr(
-            func, "__rpc_method_auth__", self.auth_backends
-        )
-        func.__rpc_method_permissions__ = getattr(
-            func, "__rpc_method_permissions__", self.permission_backends
-        )
+        method_access = getattr(func, "__rpc_method_access__", None)
+        method_auth = getattr(func, "__rpc_method_auth__", None)
+        method_permissions = getattr(func, "__rpc_method_permissions__", None)
+
+        if method_access is None:
+            func.__setattr__("__rpc_method_access__", AccessType._NOT_SET)
+        if method_auth is None:
+            func.__setattr__("__rpc_method_auth__", self.auth_backends)
+        if method_permissions is None:
+            func.__setattr__("__rpc_method_permissions__", self.permission_backends)
+
 
     def _resolve_method_access(self, func: Callable[..., Any]) -> AccessPolicy:
 
