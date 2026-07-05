@@ -3,6 +3,7 @@ theme: material
 
 nav:
   - Home: index.md 
+  - Authentication: authentication.md
   - How_To:
     - Create a method: create_method.md
     - Include a controller: include_controller.md

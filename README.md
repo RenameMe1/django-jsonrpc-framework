@@ -22,12 +22,11 @@ We provide several methods creating methods.
 - Rename existing func to new name
 
 ``` python
-
 from jsonrpc_framework import BaseController
 from jsonrpc_framework.controller.decor import jsonrpc_method
 
+
 class EchoController(BaseController):
-    
     def method_echo_hello(self, name: str) -> str:
         return f"hello {name}"
 
@@ -38,7 +37,6 @@ class EchoController(BaseController):
     @jsonrpc_method("echo_see_you")
     def wrong_name(self, name) -> str:
         return "See you fron echo_see_you method"
-
 ```
 
 ## Adding several controllers to one controller
@@ -46,23 +44,22 @@ class EchoController(BaseController):
 ``` python
 from jsonrpc_framework import RouteController
 
-class PrintController(BaseController):
 
+class PrintController(BaseController):
     async def method_print_hello(self, name) -> None:
         print(f"hello {name}")
 
     @jsonrpc_method
     async def print_goodbye(self, name) -> None:
         print(f"goodbye {name}")
- 
+
 
 route = RouteController(
-    'jsonrpc',
+    "jsonrpc",
     controllers=[
         PrintController,
         EchoController,
-    ]
-    
+    ],
 )
 ```
 
@@ -72,19 +69,16 @@ route = RouteController(
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
 
 collector = OpenRpcCollector(
-    PrintController,
-    EchoController,
-    title='My mini API'
+    PrintController, EchoController, title="My mini API"
 )
 
 
 urlpatterns = [
-    path('echorpc', EchoController,as_view),
-    path('jsonrpc', route.as_view()),
-    path('openrpc.json', OpenRpcJsonView.as_view(collector=collector)),
-    path('docs', OpenRpcDocView.as_view()),
+    path("echorpc", EchoController, as_view),
+    path("jsonrpc", route.as_view()),
+    path("openrpc.json", OpenRpcJsonView.as_view(collector=collector)),
+    path("docs", OpenRpcDocView.as_view()),
 ]
-
 ```
 
 ### Openrpc.json example

@@ -1,7 +1,7 @@
-import pytest
-
 import json as jsonlib
+
 import django
+import pytest
 from django.conf import settings
 from django.test import Client
 from django.test.utils import override_settings
@@ -10,12 +10,15 @@ INTEGRATION_URLCONF = "tests.integration.urls"
 
 
 class JsonClient(Client):
-    def post(self, path: str, *args: tuple, json: dict | None = None, **kwargs: dict):
+    def post(
+        self, path: str, *args: tuple, json: dict | None = None, **kwargs: dict
+    ):
         if json is not None:
             kwargs["data"] = jsonlib.dumps(json)
             kwargs["content_type"] = "application/json"
 
         return super().post(path, *args, **kwargs)
+
 
 def _configure_django_if_needed() -> None:
     if settings.configured:
@@ -28,6 +31,7 @@ def _configure_django_if_needed() -> None:
         INSTALLED_APPS=["django_jsonrpc"],
     )
     django.setup()
+
 
 @pytest.fixture
 def client() -> Client:

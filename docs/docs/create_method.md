@@ -11,17 +11,16 @@ and registered its name without that prefix, see example below:
 ```python
 from jsonrpc_framework import BaseConroller
 
-class MyController(BaseController):
 
+class MyController(BaseController):
     def method_sync_example(self) -> str:
         return self._send("sync_example")
 
     async def method_async_example(self) -> str:
         return self._send("async_example")
-    
+
     def _send(self, data: str) -> None:
         print(data)
-
 ```
 
 The MyController registered two JSONRPC methods `sync_example` & `async_example`, method `_send`

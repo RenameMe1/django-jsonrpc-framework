@@ -1,9 +1,9 @@
-lint:
-	uv run pre-commit run --all-files
+mypy:
+	uv run mypy .
 
 test:
 	uv run pytest tests -s -vv
-	uv run pytest django_jsonrpc/openrpc/tests -vv -s
+	uv run pytest jsonrpc_framework/openrpc/tests -vvv -s
 
 docs_:
 	uv run mkdocs serve -f docs/mkdocs.yml

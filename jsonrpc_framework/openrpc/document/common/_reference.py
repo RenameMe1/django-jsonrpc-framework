@@ -1,4 +1,5 @@
 from typing import Annotated, TypedDict
+
 from pydantic import Field
 
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
@@ -22,5 +23,5 @@ class OpenRpcReferenceObject(OpenRPCModel):
         str,
         Field(serialization_alias="$ref"),
         """REQUIRED. The reference string..
-        """
+        """,
     ]

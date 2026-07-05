@@ -17,6 +17,7 @@ def test_openrpc_server(
 ) -> None:
     _test_openrpc_server(openrpc_server, openrpc_server_dict)
 
+
 def test_openrpc_server_minimal(
     openrpc_server_minimal: OpenRpcServer,
     openrpc_server_minimal_dict: _OpenRpcServerTD,

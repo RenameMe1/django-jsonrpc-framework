@@ -1,7 +1,18 @@
-from jsonrpc_framework.openrpc.document.info import OpenRpcInfo, OpenRpcContact, OpenRpcLicense
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcInfo,
+    OpenRpcContact,
+    OpenRpcLicense,
+)
 from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
 
 import pytest
+
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcInfo,
+    OpenRpcLicense,
+)
+from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
 
 
 @pytest.fixture
@@ -56,4 +67,3 @@ def openrpc_info_minimal() -> OpenRpcInfo:
         title="Test API",
         version="1.0.0",
     )
-

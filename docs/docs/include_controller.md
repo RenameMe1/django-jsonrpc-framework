@@ -39,13 +39,12 @@ route = RouteController(
     controllers=[
         ProductController,
         AccountController,
-        ]
+    ],
 )
 
 urlpatterns = [
     path(route.path, route.as_view()),
 ]
-
 ```
 
 After all, we have a one contoller has, one entrypoint to all controllers methods.
