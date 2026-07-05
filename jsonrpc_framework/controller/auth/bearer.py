@@ -47,7 +47,13 @@ class BearerAuthentication(Generic[TokenT]):
     algorithms: ClassVar[list[str]]
     key: ClassVar[str]
 
-    def __init__(self, token_model: type[TokenT], algorithms: list[str], key: str, is_valid_token: TokenValidatorType) -> None:
+    def __init__(
+        self,
+        token_model: type[TokenT],
+        algorithms: list[str],
+        key: str,
+        is_valid_token: TokenValidatorType,
+    ) -> None:
         self.token_model = token_model
         self.algorithms = algorithms
         self.key = key
@@ -94,7 +100,13 @@ class AsyncBearerAuthentication(Generic[TokenT]):
     algorithms: ClassVar[list[str]]
     key: ClassVar[str]
 
-    def __init__(self, token_model: type[TokenT], algorithms: list[str], key: str, is_valid_token: AsyncTokenValidatorType) -> None:
+    def __init__(
+        self,
+        token_model: type[TokenT],
+        algorithms: list[str],
+        key: str,
+        is_valid_token: AsyncTokenValidatorType,
+    ) -> None:
         self.token_model = token_model
         self.algorithms = algorithms
         self.key = key
@@ -139,8 +151,9 @@ class BearerPermission(Generic[TokenT]):
     permission_checker: ClassVar[PermissionCheckerType]
     name: ClassVar[str]
 
-
-    def __init__(self, token_model: type[TokenT], permission_checker: PermissionCheckerType) -> None:
+    def __init__(
+        self, token_model: type[TokenT], permission_checker: PermissionCheckerType
+    ) -> None:
         self.token_model = token_model
         self.permission_checker = permission_checker
 
@@ -155,7 +168,9 @@ class AsyncBearerPermission(Generic[TokenT]):
     permission_checker: ClassVar[AsyncPermissionCheckerType]
     name: ClassVar[str]
 
-    def __init__(self, token_model: type[TokenT], permission_checker: AsyncPermissionCheckerType) -> None:
+    def __init__(
+        self, token_model: type[TokenT], permission_checker: AsyncPermissionCheckerType
+    ) -> None:
         self.token_model = token_model
         self.permission_checker = permission_checker
 

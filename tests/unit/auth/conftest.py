@@ -39,7 +39,9 @@ BearerAuth = BearerAuthentication(
 )
 
 
-def permission_checker(auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> bool:
+def permission_checker(
+    auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy
+) -> bool:
     return auth_result.auth_result.admin is True
 
 
@@ -93,8 +95,12 @@ AsyncBearerAuth = AsyncBearerAuthentication(
     key=test_secret,
 )
 
-async def async_permission_checker(auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> bool:
+
+async def async_permission_checker(
+    auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy
+) -> bool:
     return auth_result.auth_result.admin is True
+
 
 AsyncAdminPermission = AsyncBearerPermission(
     token_model=BearerToken,
