@@ -1,5 +1,5 @@
-lint:
-	uv run pre-commit run --all-files
+mypy:
+	uv run mypy .
 
 test:
 	uv run pytest tests -s -vv

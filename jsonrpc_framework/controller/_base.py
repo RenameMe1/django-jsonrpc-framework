@@ -30,8 +30,8 @@ class BaseController(View):
 
     # Access block
     default_access: AccessType = AccessType.PUBLIC
-    permission_backends: Sequence[type[BasePermission]] | None = None
-    auth_backends: Sequence[type[BaseAuthentication]] | None = None
+    permission_backends: Sequence[BasePermission] | None = None
+    auth_backends: Sequence[BaseAuthentication] | None = None
 
     registry: dict[MethodType, Callable[..., Any]]
 

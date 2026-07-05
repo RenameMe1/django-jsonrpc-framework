@@ -32,7 +32,7 @@ class AccessType(StrEnum):
 class AuthResult:
     auth_result: Any | None
     credentials_present: bool
-    backend_used: [BaseAuthentication | AsyncBaseAuthentication] | None
+    backend_used: BaseAuthentication | AsyncBaseAuthentication | None
 
 
 class BaseAuthentication(Protocol):
@@ -172,7 +172,7 @@ async def _handle_private_access(
 
 
 async def is_have_credentials(
-    backend: [BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
+    backend: BaseAuthentication | AsyncBaseAuthentication, request: HttpRequest
 ) -> bool:
 
     result = backend.has_credentials(request)
@@ -184,7 +184,7 @@ async def is_have_credentials(
 
 
 async def is_authenticate(
-    backend: [BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
+    backend: BaseAuthentication | AsyncBaseAuthentication, request: HttpRequest
 ) -> AuthResult | None:
 
     result = backend.authenticate(request)

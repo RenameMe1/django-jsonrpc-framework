@@ -32,7 +32,7 @@ class PermissionCheckerType(Protocol):
 
 
 class TokenValidatorType(Protocol):
-    def __call__(self, token: str) -> True: ...
+    def __call__(self, token: TokenT) -> bool: ...
 
 
 class AsyncTokenValidatorType(Protocol):
@@ -40,12 +40,12 @@ class AsyncTokenValidatorType(Protocol):
 
 
 class BearerAuthentication(Generic[TokenT]):
-    token_model: ClassVar[type[TokenT]]
-    is_valid_token: ClassVar[TokenValidatorType]
-    name: ClassVar[str]
+    token_model: type[TokenT]
+    is_valid_token: TokenValidatorType
+    name: str
 
-    algorithms: ClassVar[list[str]]
-    key: ClassVar[str]
+    algorithms: list[str]
+    key: str
 
     def __init__(
         self,
@@ -93,12 +93,12 @@ class BearerAuthentication(Generic[TokenT]):
 
 
 class AsyncBearerAuthentication(Generic[TokenT]):
-    token_model: ClassVar[type[TokenT]]
-    is_valid_token: ClassVar[AsyncTokenValidatorType]
-    name: ClassVar[str]
+    token_model: type[TokenT]
+    is_valid_token: AsyncTokenValidatorType
+    name: str
 
-    algorithms: ClassVar[list[str]]
-    key: ClassVar[str]
+    algorithms: list[str]
+    key: str
 
     def __init__(
         self,
@@ -116,7 +116,6 @@ class AsyncBearerAuthentication(Generic[TokenT]):
         return request.headers.get("Authorization", "").startswith("Bearer ")
 
     async def authenticate(self, request: HttpRequest) -> AuthResult | None:
-        print("asdasdasdasdsadasds")
         auth = request.headers.get("Authorization", "")
         token = auth.removeprefix("Bearer ").strip()
 
@@ -147,9 +146,9 @@ class AsyncBearerAuthentication(Generic[TokenT]):
 
 
 class BearerPermission(Generic[TokenT]):
-    token_model: ClassVar[type[TokenT]]
-    permission_checker: ClassVar[PermissionCheckerType]
-    name: ClassVar[str]
+    token_model: type[TokenT]
+    permission_checker: PermissionCheckerType
+    name: str
 
     def __init__(
         self, token_model: type[TokenT], permission_checker: PermissionCheckerType
@@ -164,9 +163,9 @@ class BearerPermission(Generic[TokenT]):
 
 
 class AsyncBearerPermission(Generic[TokenT]):
-    token_model: ClassVar[type[TokenT]]
-    permission_checker: ClassVar[AsyncPermissionCheckerType]
-    name: ClassVar[str]
+    token_model: type[TokenT]
+    permission_checker: AsyncPermissionCheckerType
+    name: str
 
     def __init__(
         self, token_model: type[TokenT], permission_checker: AsyncPermissionCheckerType

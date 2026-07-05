@@ -28,5 +28,5 @@ jobs:
       - uses: astral-sh/setup-uv@v3
       - uses: actions/checkout@v4
       - run: uv sync --extra jwt --all-groups
-      - run: make lint
+      - run: make mypy
 

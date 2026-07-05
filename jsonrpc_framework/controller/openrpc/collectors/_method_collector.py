@@ -58,9 +58,6 @@ class InputCollector:
                     OpenRcpContentDescriptorObject(
                         name=param.name,
                         schema_={
-                            "type": validate_type_name(param.annotation.__name__),
-                        },
-                        required=True if param.default is param.empty else False,
                             "type": validate_type_name(
                                 param.annotation.__name__
                             ),
