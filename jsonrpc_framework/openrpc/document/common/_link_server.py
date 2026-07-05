@@ -5,12 +5,7 @@ from pydantic import Field
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
 from jsonrpc_framework.openrpc.document.server._server import (
     OpenRpcServerObjectVariable,
-<<<<<<< HEAD
-)
-from jsonrpc_framework.openrpc.document.server._server import (
-=======
->>>>>>> 041d11d (Ruff format)
-    _OpenRpcServerObjectVariableTD,
+   _OpenRpcServerObjectVariableTD,
 )
 
 __all__ = [
@@ -63,13 +58,9 @@ class OpenRpcLinkObjectServer(OpenRPCModel):
     ] = None
     summary: Annotated[
         str | None,
-<<<<<<< HEAD
-        Field(default=None, description=("A short summary of what the server is.")),
-=======
         Field(
             default=None, description=("A short summary of what the server is.")
         ),
->>>>>>> 041d11d (Ruff format)
     ] = None
     variables: Annotated[
         dict[str, OpenRpcServerObjectVariable] | None,

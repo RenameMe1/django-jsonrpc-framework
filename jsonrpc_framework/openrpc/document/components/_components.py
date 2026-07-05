@@ -21,7 +21,6 @@ from jsonrpc_framework.openrpc.document.common._example import (
     _OpenRpcExampleObjectTD,
 )
 from jsonrpc_framework.openrpc.document.common._link import _OpenRpcLinkObjectTD
-<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.common._error import _OpenRpcErrorObjectTD
 from jsonrpc_framework.openrpc.document.common._example import _OpenRpcExampleObjectTD
 from jsonrpc_framework.openrpc.document.common._pairing_object import (
@@ -30,11 +29,6 @@ from jsonrpc_framework.openrpc.document.common._pairing_object import (
 from jsonrpc_framework.openrpc.document.common._descriptor import (
     _OpenRcpContentDescriptorObjectTD,
 )
-=======
-from jsonrpc_framework.openrpc.document.common._pairing_object import (
-    _OpenRpcExamplePairingObjectTD,
-)
->>>>>>> 041d11d (Ruff format)
 from jsonrpc_framework.openrpc.document.common._tag import _OpenRpcTagTD
 
 

@@ -1,6 +1,5 @@
 import pytest
 
-<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.method._method import (
     _OpenRpcMethodTD,
     OpenRpcMethod,
@@ -21,8 +20,6 @@ from jsonrpc_framework.openrpc.document.server import (
 from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
 from jsonrpc_framework.openrpc.document.common import OpenRcpTypeSchema
 
-=======
->>>>>>> 041d11d (Ruff format)
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
 from jsonrpc_framework.openrpc.document.common import (
     OpenRcpContentDescriptorObject,

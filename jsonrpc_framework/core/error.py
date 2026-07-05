@@ -37,7 +37,6 @@ class InternalError(RpcError):
     code: int = -32603
     message: str = "Internal error"
 
-<<<<<<< HEAD
 
 class ParseExcError(Exception): ...
 
@@ -53,10 +52,3 @@ class UnauthorizedError(RpcError):
 class ForbiddenError(RpcError):
     code: int = -32002
     message: str = "Forbidden"
-=======
-
-class ParseExcError(Exception): ...
-
-
-class InvalidRequestExcError(Exception): ...
->>>>>>> 041d11d (Ruff format)

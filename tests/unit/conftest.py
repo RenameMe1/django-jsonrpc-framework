@@ -10,11 +10,8 @@ from jsonrpc_framework.core.models import (
 )
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
 from jsonrpc_framework.logic.responser import ResponseBuilder
-<<<<<<< HEAD
 from jsonrpc_framework.controller.auth import AccessType, AccessPolicy
-=======
 from jsonrpc_framework.logic.validator import RequestValidator
->>>>>>> 041d11d (Ruff format)
 
 # Validators fixtures
 

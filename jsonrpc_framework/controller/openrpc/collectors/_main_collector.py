@@ -3,16 +3,9 @@ from jsonrpc_framework.controller.openrpc.collectors._method_collector import (
     MethodsCollector,
 )
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
-<<<<<<< HEAD
-from jsonrpc_framework.openrpc.document.info import OpenRpcContact, OpenRpcLicense
-
-from jsonrpc_framework.controller.openrpc.collectors._method_collector import (
-    MethodsCollector,
-=======
 from jsonrpc_framework.openrpc.document.info import (
     OpenRpcContact,
     OpenRpcLicense,
->>>>>>> 041d11d (Ruff format)
 )
 
 type ControllerType = type[BaseController] | BaseController

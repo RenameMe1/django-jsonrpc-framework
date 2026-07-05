@@ -42,20 +42,9 @@ def test_batch_response(response_builder: ResponseBuilder) -> None:
     )
 
     assert response.status_code == 200
-<<<<<<< HEAD
-    assert (
-        response.content
-        == (
-            '[{"jsonrpc": "2.0", "result": 1, "id": 1}, '
-            '{"jsonrpc": "2.0", "error": '
-            '{"code": -32601, "message": "Method not found", "data": "test"}, '
-            '"id": "2"}]'
-        ).encode()
-=======
     assert response.content == (
         b'[{"jsonrpc": "2.0", "result": 1, "id": 1}, '
         b'{"jsonrpc": "2.0", "error": '
         b'{"code": -32601, "message": "Method not found", "data": "test"}, '
         b'"id": "2"}]'
->>>>>>> 041d11d (Ruff format)
     )

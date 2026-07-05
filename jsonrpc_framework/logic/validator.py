@@ -15,13 +15,9 @@ type BatchType = list[Request | Notification | RpcError]
 
 
 class RequestValidator:
-<<<<<<< HEAD
-    def validate_body(self, body: bytes | Any) -> RequestType | BatchType | RpcError:
-=======
     def validate_body(
         self, body: bytes | Any
     ) -> RequestType | BatchType | RpcError:
->>>>>>> 041d11d (Ruff format)
         try:
             json_body = json.loads(body)
         except json.JSONDecodeError:

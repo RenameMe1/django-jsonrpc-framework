@@ -17,28 +17,12 @@ from jsonrpc_framework.openrpc.document.common._descriptor import (
 from jsonrpc_framework.openrpc.document.common._error import (
     _OpenRpcErrorObjectTD,
 )
-<<<<<<< HEAD
-from jsonrpc_framework.openrpc.document.external_docs._external_docs import (
-    _OpenRpcExternalDocTD,
-)
-from jsonrpc_framework.openrpc.document.common._pairing_object import (
-    _OpenRpcExamplePairingObjectTD,
-)
-from jsonrpc_framework.openrpc.document.common._reference import (
-    _OpenRpcReferenceObjectTD,
-)
-from jsonrpc_framework.openrpc.document.common._link import _OpenRpcLinkObjectTD
-from jsonrpc_framework.openrpc.document.common._error import _OpenRpcErrorObjectTD
-from jsonrpc_framework.openrpc.document.common._descriptor import (
-    _OpenRcpContentDescriptorObjectTD,
-=======
 from jsonrpc_framework.openrpc.document.common._link import _OpenRpcLinkObjectTD
 from jsonrpc_framework.openrpc.document.common._pairing_object import (
     _OpenRpcExamplePairingObjectTD,
 )
 from jsonrpc_framework.openrpc.document.common._reference import (
     _OpenRpcReferenceObjectTD,
->>>>>>> 041d11d (Ruff format)
 )
 from jsonrpc_framework.openrpc.document.common._tag import _OpenRpcTagTD
 from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc

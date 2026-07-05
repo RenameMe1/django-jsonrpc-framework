@@ -4,7 +4,6 @@ from collections.abc import Callable
 from typing import Any, get_type_hints, is_typeddict
 
 from jsonrpc_framework.controller._base import BaseController
-<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.method._method import OpenRpcMethod
 from jsonrpc_framework.openrpc.document.common import (
     OpenRpcTag,
@@ -19,8 +18,6 @@ from jsonrpc_framework.openrpc.document.common import (
     OpenRpcRefSchema,
 )
 
-=======
->>>>>>> 041d11d (Ruff format)
 from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.openrpc.document.common import (
     OpenRcpContentDescriptorObject,

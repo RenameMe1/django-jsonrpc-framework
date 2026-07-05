@@ -7,10 +7,6 @@ from jsonrpc_framework.openrpc.document.common._link_server import (
     OpenRpcLinkObjectServer,
     _OpenRpcLinkObjectServerTD,
 )
-<<<<<<< HEAD
-
-=======
->>>>>>> 041d11d (Ruff format)
 
 __all__ = [
     "OpenRpcLinkObject",

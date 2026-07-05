@@ -1,21 +1,8 @@
 from collections.abc import Callable
 
 import pytest
-
-<<<<<<< HEAD
 from django.http import HttpRequest
 
-from jsonrpc_framework.logic.dispatcher import RpcDispatcher
-from jsonrpc_framework.core.models import (
-    MethodType,
-    SuccessResponse,
-    ErrorResponse,
-    RpcError,
-)
-from collections.abc import Callable
-from jsonrpc_framework.core.models import Request, Notification
-
-=======
 from jsonrpc_framework.core.models import (
     ErrorResponse,
     MethodType,
@@ -25,7 +12,6 @@ from jsonrpc_framework.core.models import (
     SuccessResponse,
 )
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
->>>>>>> 041d11d (Ruff format)
 
 pytestmark = pytest.mark.asyncio
 
@@ -154,13 +140,9 @@ async def test_valid_batch_with_request_and_notification(
     ],
 ) -> None:
     result = await dispatcher.dispatch(
-<<<<<<< HEAD
         valid_requests_batch_with_request_and_notification,
         registry,
         http_request=HttpRequest(),
-=======
-        valid_requests_batch_with_request_and_notification, registry
->>>>>>> 041d11d (Ruff format)
     )
 
     assert isinstance(result, list)

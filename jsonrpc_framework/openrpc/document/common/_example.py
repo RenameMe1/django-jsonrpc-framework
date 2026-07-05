@@ -23,13 +23,9 @@ class OpenRpcExampleObject(OpenRPCModel):
 
     summary: Annotated[
         str | None,
-<<<<<<< HEAD
-        Field(default=None, description=("Short description for the example..")),
-=======
         Field(
             default=None, description=("Short description for the example..")
         ),
->>>>>>> 041d11d (Ruff format)
     ] = None
     value: Annotated[
         str,

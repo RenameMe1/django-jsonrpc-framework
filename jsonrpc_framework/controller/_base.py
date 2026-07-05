@@ -9,11 +9,13 @@ from jsonrpc_framework.core.error import RpcError
 from jsonrpc_framework.core.models import MethodType
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
 from jsonrpc_framework.logic.responser import ResponseBuilder
-from jsonrpc_framework.logic.validator import (
+from jsonrpc_framework.controller.auth import (
     AccessType,
     BasePermission,
     BaseAuthentication,
     AccessPolicy,
+)
+from jsonrpc_framework.logic.validator import (
     BatchType,
     RequestType,
     RequestValidator,

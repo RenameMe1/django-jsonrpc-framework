@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from jsonrpc_framework.openrpc.document.info import (
     OpenRpcInfo,
     OpenRpcContact,
@@ -6,8 +5,6 @@ from jsonrpc_framework.openrpc.document.info import (
 )
 from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
 
-=======
->>>>>>> 041d11d (Ruff format)
 import pytest
 
 from jsonrpc_framework.openrpc.document.info import (
