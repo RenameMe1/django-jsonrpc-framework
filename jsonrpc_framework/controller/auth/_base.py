@@ -32,7 +32,7 @@ class AccessType(StrEnum):
 class AuthResult:
     auth_result: Any | None
     credentials_present: bool
-    backend_used: type[BaseAuthentication | AsyncBaseAuthentication] | None
+    backend_used: [BaseAuthentication | AsyncBaseAuthentication] | None
 
 
 class BaseAuthentication(Protocol):
@@ -104,8 +104,8 @@ INVALID_AUTH: Final = None
 @dataclass
 class AccessPolicy:
     access: AccessType
-    auth: Sequence[type[BaseAuthentication | AsyncBaseAuthentication]]
-    permissions: Sequence[type[BasePermission | AsyncBasePermission]]
+    auth: Sequence[BaseAuthentication | AsyncBaseAuthentication]
+    permissions: Sequence[BasePermission | AsyncBasePermission]
 
 
 async def run_auth(
@@ -127,7 +127,7 @@ async def run_auth(
 
 async def _handle_optional_access(
     request: HttpRequest,
-    auth_backends: Sequence[type[BaseAuthentication] | type[AsyncBaseAuthentication]],
+    auth_backends: Sequence[BaseAuthentication | AsyncBaseAuthentication],
 ) -> AuthResult | None:
 
     print("start optional access \n")
@@ -158,7 +158,7 @@ async def _handle_optional_access(
 
 async def _handle_private_access(
     request: HttpRequest,
-    auth_backends: Sequence[type[BaseAuthentication] | type[AsyncBaseAuthentication]],
+    auth_backends: Sequence[BaseAuthentication | AsyncBaseAuthentication],
 ) -> AuthResult | None:
 
     for backend in auth_backends:
@@ -172,11 +172,10 @@ async def _handle_private_access(
 
 
 async def is_have_credentials(
-    backend: type[BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
+    backend: [BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
 ) -> bool:
-    init_backend = backend()
 
-    result = init_backend.has_credentials(request)
+    result = backend.has_credentials(request)
 
     if isinstance(result, Awaitable):
         return await result
@@ -185,11 +184,10 @@ async def is_have_credentials(
 
 
 async def is_authenticate(
-    backend: type[BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
+    backend: [BaseAuthentication | AsyncBaseAuthentication], request: HttpRequest
 ) -> AuthResult | None:
-    init_backend = backend()
 
-    result = init_backend.authenticate(request)
+    result = backend.authenticate(request)
 
     if isinstance(result, Awaitable):
         return await result
@@ -212,14 +210,13 @@ async def run_permissions(
         return True
 
     for backend in access_policy.permissions:
-        init_backend = backend()
 
-        if iscoroutinefunction(init_backend.has_permission):
-            has_permission = await init_backend.has_permission(
+        if iscoroutinefunction(backend.has_permission):
+            has_permission = await backend.has_permission(
                 access_policy, request, auth_result
             )
         else:
-            has_permission = init_backend.has_permission(
+            has_permission = backend.has_permission(
                 access_policy, request, auth_result
             )
 

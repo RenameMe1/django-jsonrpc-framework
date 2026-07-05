@@ -90,7 +90,7 @@ pip install django-jsonrpc-framework[jwt]
 Bearer authentication expects the `Authorization` header with `Bearer <token>` content. Any issue raises an Unauthorized error.
 
 
-First, create a `BearerToken` model to validate token content and a function to decode the token.
+First, create a `BearerToken` model to validate token content and a function to check a token content.
 
 
 ``` python
@@ -101,34 +101,38 @@ class BearerToken(BaseModel):
     admin: bool
     exp: float
 
-def jwt_decoder(token: str) -> dict[str, Any] | None:
-    try:
-        return jwt.decode(token, key=test_secret, algorithms=["HS256"])
-    except jwt.InvalidTokenError:
-        return None
+def jwt_validator(token: BearerToken) -> bool:
+    if token.exp < time.time():
+        return False
+    return True
 
-async def async_jwt_decoder(token: str) -> dict[str, Any] | None:
-    # You can use await in this func
-    try:
-        return jwt.decode(token, key=test_secret, algorithms=["HS256"])
-    except jwt.InvalidTokenError:
-        return None
+async def async_jwt_validator(token: BearerToken) -> bool:
+    if token.exp < time.time():
+        return False
+    return True
 
 ```
 
-After that, create an authentication backend using a factory: `make_bearer_auth_backend` for sync implementation, `make_async_bearer_auth_backend` for async implementation. We create both for learning purposes. A controller supports both backend types (sync and async) at the same time.
+Next step is create an authentification backend.  We create both for learning purposes, you can create on of. A controller supports both backend types (sync and async) at the same time.
 
 
 ```python
-from jsonrpc_framework.controller.auth.bearer import make_bearer_auth_backend, make_async_bearer_auth_backend
+from jsonrpc_framework.controller.auth.bearer import BearerAuthentication, AsyncBearerAuthentication
 
-SyncAuthBackend = make_bearer_auth_backend(
+test_secret = 'keep_it_secretly'
+
+SyncAuthBackend = BearerAuthentication(
     token_model=BearerToken,
-    token_decoder=jwt_decoder,
-    )
-AsyncAuthBackend = make_async_bearer_auth_backend(
+    key=test_secret,
+    algorithms=["HS256"],
+    is_valid_token=jwt_validator,
+)
+
+AsyncAuthBackend = AsyncBearerAuthentication(
     token_model=BearerToken,
-    token_decoder=async_jwt_decoder,
+    is_valid_token=async_jwt_validator,
+    algorithms=["HS256"],
+    key=test_secret,
 )
 ```
 
@@ -213,11 +217,12 @@ class MethodAccess(BaseController):
 
 Authorization setup looks similar to authentication setup.
 
-First, create helper functions and permission backends using factories: `make_permission_backend` for a sync backend and `make_async_permission_backend` for an async backend.
+First, we create a helper's functions and instanses permissions backends, same
+the authentification backends created. We create both to learning purpose, you can create one of.
 
 ``` python
 from pydantic import BaseModel
-from jsonrpc_framework.controller.auth.bearer import make_permission_backend, make_async_permission_backend
+from jsonrpc_framework.controller.auth.bearer import BearerPermission, AsyncBearerPermission
 
 
 class BearerToken(BaseModel):
@@ -231,13 +236,13 @@ def permission_checker(token: BearerToken) -> bool:
 async def async_permission_checker(token: BearerToken) -> bool:
     return token.admin is True
 
-AdminPermission = make_permission_backend(
+AdminPermission = BearerPermission(
     token_model=BearerToken,
     permission_checker=permission_checker,
 )
 
 
-AsyncAdminPermission = make_async_permission_backend(
+AsyncAdminPermission = AsyncBearerPermission(
     token_model=BearerToken,
     permission_checker=async_permission_checker,
 )

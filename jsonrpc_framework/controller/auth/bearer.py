@@ -1,5 +1,6 @@
 from typing import Generic, TypeVar, Any, ClassVar, Protocol
 
+from jwt import algorithms
 from pydantic import BaseModel, ValidationError
 
 from jsonrpc_framework.controller.auth import AuthResult, INVALID_AUTH
@@ -30,31 +31,42 @@ class PermissionCheckerType(Protocol):
     ) -> bool: ...
 
 
-class TokenDecoderType(Protocol):
-    def __call__(self, token: str) -> dict[str, Any]: ...
+class TokenValidatorType(Protocol):
+    def __call__(self, token: str) -> True: ...
 
 
-class AsyncTokenDecoderType(Protocol):
-    def __call__(self, token: str) -> Awaitable[dict[str, Any]]: ...
+class AsyncTokenValidatorType(Protocol):
+    def __call__(self, token: TokenT) -> Awaitable[bool]: ...
 
 
 class BearerAuthentication(Generic[TokenT]):
     token_model: ClassVar[type[TokenT]]
-    decode_token: ClassVar[TokenDecoderType]
+    is_valid_token: ClassVar[TokenValidatorType]
     name: ClassVar[str]
+
+    algorithms: ClassVar[list[str]]
+    key: ClassVar[str]
+
+    def __init__(self, token_model: type[TokenT], algorithms: list[str], key: str, is_valid_token: TokenValidatorType) -> None:
+        self.token_model = token_model
+        self.algorithms = algorithms
+        self.key = key
+        self.is_valid_token = is_valid_token
 
     def has_credentials(self, request: HttpRequest) -> bool:
         return request.headers.get("Authorization", "").startswith("Bearer ")
 
     def authenticate(self, request: HttpRequest) -> AuthResult | None:
-        print("asdasdasdasdsadasds")
         auth = request.headers.get("Authorization", "")
         token = auth.removeprefix("Bearer ").strip()
 
         if token is None:
             return INVALID_AUTH
 
-        payload = self.decode_token(token)
+        try:
+            payload = jwt.decode(token, key=self.key, algorithms=self.algorithms)
+        except jwt.InvalidTokenError:
+            return INVALID_AUTH
 
         if payload is None:
             return INVALID_AUTH
@@ -64,17 +76,29 @@ class BearerAuthentication(Generic[TokenT]):
         except ValidationError:
             return INVALID_AUTH
 
+        if not self.is_valid_token(token_data):
+            return INVALID_AUTH
+
         return AuthResult(
             auth_result=token_data,
             credentials_present=True,
-            backend_used=self.__class__,
+            backend_used=self,
         )
 
 
 class AsyncBearerAuthentication(Generic[TokenT]):
     token_model: ClassVar[type[TokenT]]
-    decode_token: ClassVar[AsyncTokenDecoderType]
+    is_valid_token: ClassVar[AsyncTokenValidatorType]
     name: ClassVar[str]
+
+    algorithms: ClassVar[list[str]]
+    key: ClassVar[str]
+
+    def __init__(self, token_model: type[TokenT], algorithms: list[str], key: str, is_valid_token: AsyncTokenValidatorType) -> None:
+        self.token_model = token_model
+        self.algorithms = algorithms
+        self.key = key
+        self.is_valid_token = is_valid_token
 
     async def has_credentials(self, request: HttpRequest) -> bool:
         return request.headers.get("Authorization", "").startswith("Bearer ")
@@ -87,7 +111,10 @@ class AsyncBearerAuthentication(Generic[TokenT]):
         if token is None:
             return INVALID_AUTH
 
-        payload = await self.decode_token(token)
+        try:
+            payload = jwt.decode(token, key=self.key, algorithms=self.algorithms)
+        except jwt.InvalidTokenError:
+            return INVALID_AUTH
 
         if payload is None:
             return INVALID_AUTH
@@ -97,10 +124,13 @@ class AsyncBearerAuthentication(Generic[TokenT]):
         except ValidationError:
             return INVALID_AUTH
 
+        if not await self.is_valid_token(token_data):
+            return INVALID_AUTH
+
         return AuthResult(
             auth_result=token_data,
             credentials_present=True,
-            backend_used=self.__class__,
+            backend_used=self,
         )
 
 
@@ -108,6 +138,11 @@ class BearerPermission(Generic[TokenT]):
     token_model: ClassVar[type[TokenT]]
     permission_checker: ClassVar[PermissionCheckerType]
     name: ClassVar[str]
+
+
+    def __init__(self, token_model: type[TokenT], permission_checker: PermissionCheckerType) -> None:
+        self.token_model = token_model
+        self.permission_checker = permission_checker
 
     def has_permission(
         self, access_policy: AccessPolicy, request: HttpRequest, auth_result: AuthResult
@@ -120,77 +155,11 @@ class AsyncBearerPermission(Generic[TokenT]):
     permission_checker: ClassVar[AsyncPermissionCheckerType]
     name: ClassVar[str]
 
+    def __init__(self, token_model: type[TokenT], permission_checker: AsyncPermissionCheckerType) -> None:
+        self.token_model = token_model
+        self.permission_checker = permission_checker
+
     async def has_permission(
         self, access_policy: AccessPolicy, request: HttpRequest, auth_result: AuthResult
     ) -> bool:
         return await self.permission_checker(auth_result, request, access_policy)
-
-
-def make_bearer_auth_backend(
-    *,
-    token_model: type[TokenT],
-    token_decoder: TokenDecoderType,
-) -> type[BearerAuthentication[TokenT]]:
-
-    class _Backend(BearerAuthentication[TokenT]):
-        token_model: ClassVar[type[TokenT]]
-        decode_token: ClassVar[TokenDecoderType]
-        name: ClassVar[str]
-
-    _Backend.token_model = token_model
-    _Backend.decode_token = staticmethod(token_decoder)
-    _Backend.name = f"BearerAuth_{token_model.__name__}"
-
-    return _Backend
-
-
-def make_permission_backend(
-    *,
-    token_model: type[TokenT],
-    permission_checker: PermissionCheckerType,
-) -> type[BearerPermission[TokenT]]:
-
-    class _Permission(BearerPermission[TokenT]):
-        token_model: ClassVar[type[TokenT]]
-        permission_checker: ClassVar[PermissionCheckerType]
-        name: ClassVar[str]
-
-    _Permission.token_model = token_model
-    _Permission.permission_checker = staticmethod(permission_checker)
-    _Permission.name = f"Permission_{token_model.__name__}"
-
-    return _Permission
-
-
-def make_async_bearer_auth_backend(
-    *,
-    token_model: type[TokenT],
-    token_decoder: AsyncTokenDecoderType,
-) -> type[AsyncBearerAuthentication[TokenT]]:
-    class _Backend(AsyncBearerAuthentication[TokenT]):
-        token_model: ClassVar[type[TokenT]]
-        decode_token: ClassVar[AsyncTokenDecoderType]
-        name: ClassVar[str]
-
-    _Backend.token_model = token_model
-    _Backend.decode_token = staticmethod(token_decoder)
-    _Backend.name = f"BearerAuth_{token_model.__name__}"
-
-    return _Backend
-
-
-def make_async_permission_backend(
-    *,
-    token_model: type[TokenT],
-    permission_checker: AsyncPermissionCheckerType,
-) -> type[AsyncBearerPermission[TokenT]]:
-    class _Permission(AsyncBearerPermission[TokenT]):
-        token_model: ClassVar[type[TokenT]]
-        permission_checker: ClassVar[AsyncPermissionCheckerType]
-        name: ClassVar[str]
-
-    _Permission.token_model = token_model
-    _Permission.permission_checker = staticmethod(permission_checker)
-    _Permission.name = f"Permission_{token_model.__name__}"
-
-    return _Permission

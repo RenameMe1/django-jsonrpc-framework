@@ -5,12 +5,12 @@ import secrets
 from typing import TypeVar
 
 from jsonrpc_framework.controller.auth.bearer import (
-    make_bearer_auth_backend,
-    make_permission_backend,
-    make_async_bearer_auth_backend,
-    make_async_permission_backend,
+    BearerAuthentication,
+    BearerPermission,
+    AsyncBearerAuthentication,
+    AsyncBearerPermission,
 )
-
+from jsonrpc_framework.controller.auth import AccessPolicy, AuthResult
 from django.http import HttpRequest
 import jwt
 from pydantic import BaseModel
@@ -25,24 +25,25 @@ class BearerToken(BaseModel):
     exp: float
 
 
-def jwt_decode(token: str) -> dict[str, Any] | None:
-    try:
-        return jwt.decode(token, key=test_secret, algorithms=["HS256"])
-    except jwt.InvalidTokenError:
-        return None
+def jwt_validator(token: BearerToken) -> bool:
+    if token.exp < time.time():
+        return False
+    return True
 
 
-BearerAuth = make_bearer_auth_backend(
+BearerAuth = BearerAuthentication(
     token_model=BearerToken,
-    token_decoder=jwt_decode,
+    key=test_secret,
+    algorithms=["HS256"],
+    is_valid_token=jwt_validator,
 )
 
 
-def permission_checker(token: BearerToken, request: HttpRequest) -> bool:
-    return token.admin is True
+def permission_checker(auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> bool:
+    return auth_result.auth_result.admin is True
 
 
-AdminPermission = make_permission_backend(
+AdminPermission = BearerPermission(
     token_model=BearerToken,
     permission_checker=permission_checker,
 )
@@ -79,20 +80,23 @@ def user_bearer_token() -> str:
     )
 
 
-async def async_jwt_decode(token: str) -> dict[str, Any]:
-    return jwt.decode(token, key=test_secret, algorithms=["HS256"])
+async def async_jwt_validator(token: BearerToken) -> bool:
+    if token.exp < time.time():
+        return False
+    return True
 
 
-async def async_permission_checker(token: TokenT, request: HttpRequest) -> bool:
-    return token.admin is True
-
-
-AsyncBearerAuth = make_async_bearer_auth_backend(
+AsyncBearerAuth = AsyncBearerAuthentication(
     token_model=BearerToken,
-    token_decoder=async_jwt_decode,
+    is_valid_token=async_jwt_validator,
+    algorithms=["HS256"],
+    key=test_secret,
 )
 
-AsyncAdminPermission = make_async_permission_backend(
+async def async_permission_checker(auth_result: AuthResult, request: HttpRequest, access_policy: AccessPolicy) -> bool:
+    return auth_result.auth_result.admin is True
+
+AsyncAdminPermission = AsyncBearerPermission(
     token_model=BearerToken,
     permission_checker=async_permission_checker,
 )

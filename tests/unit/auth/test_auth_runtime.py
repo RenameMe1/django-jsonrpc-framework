@@ -115,7 +115,7 @@ async def test_auth_with_correct_credentials(
             sub="test", admin=True, exp=auth_result.auth_result.exp
         ),
         credentials_present=True,
-        backend_used="BearerAuth_BearerToken",
+        backend_used=BearerAuth,
     )
 
     auth_result = await run_auth(private_access_policy, request)
@@ -124,7 +124,7 @@ async def test_auth_with_correct_credentials(
             sub="test", admin=True, exp=auth_result.auth_result.exp
         ),
         credentials_present=True,
-        backend_used="BearerAuth_BearerToken",
+        backend_used=BearerAuth,
     )
 
 
@@ -152,5 +152,5 @@ async def test_async_auth_runtime(
             sub="test", admin=True, exp=auth_result.auth_result.exp
         ),
         credentials_present=True,
-        backend_used="BearerAuth_BearerToken",
+        backend_used=AsyncBearerAuth,
     )

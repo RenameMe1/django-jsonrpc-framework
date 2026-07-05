@@ -99,8 +99,8 @@ def test_decorator_openrpc_metadata() -> None:
     )
     assert getattr(handler, "__rpc_method_access__", None) == AccessType._NOT_SET
     assert getattr(handler, "__rpc_method_tags__", None) is None
-    assert getattr(handler, "__rpc_method_auth__", None) is None
-    assert getattr(handler, "__rpc_method_permissions__", None) is None
+    assert getattr(handler, "__rpc_method_auth__", []) == []
+    assert getattr(handler, "__rpc_method_permissions__", []) == []
 
 
 def test_decorator_openrpc_metadata_without_alias() -> None:
@@ -124,8 +124,8 @@ def test_decorator_openrpc_metadata_without_alias() -> None:
     )
     assert getattr(handler, "__rpc_method_access__", None) == AccessType._NOT_SET
     assert getattr(handler, "__rpc_method_tags__", None) is None
-    assert getattr(handler, "__rpc_method_auth__", None) is None
-    assert getattr(handler, "__rpc_method_permissions__", None) is None
+    assert getattr(handler, "__rpc_method_auth__", []) == []
+    assert getattr(handler, "__rpc_method_permissions__", []) == []
 
 
 def test_unexpected_access_type() -> None:
