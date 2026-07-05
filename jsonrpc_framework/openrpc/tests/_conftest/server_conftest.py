@@ -7,7 +7,6 @@ from jsonrpc_framework.openrpc.document.server import (
 from jsonrpc_framework.openrpc.document.server._server import _OpenRpcServerTD
 
 
-
 @pytest.fixture
 def openrpc_server() -> OpenRpcServer:
     return OpenRpcServer(

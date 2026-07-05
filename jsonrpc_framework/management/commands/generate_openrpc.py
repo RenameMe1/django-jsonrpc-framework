@@ -9,7 +9,6 @@ from django.utils.module_loading import import_string
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
 
 
-
 class Command(BaseCommand):
     help = "Generate OpenRPC JSON from a collector object"
 

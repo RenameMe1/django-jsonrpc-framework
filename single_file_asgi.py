@@ -20,7 +20,6 @@ from jsonrpc_framework.openrpc.document.info import (
 )
 
 
-
 class CustomError(RpcError):
     code: int = -4000
     message: str = "Custom error"

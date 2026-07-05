@@ -58,11 +58,9 @@ class InputCollector:
                     OpenRcpContentDescriptorObject(
                         name=param.name,
                         schema_={
-<<<<<<< HEAD
                             "type": validate_type_name(param.annotation.__name__),
                         },
                         required=True if param.default is param.empty else False,
-=======
                             "type": validate_type_name(
                                 param.annotation.__name__
                             ),
@@ -70,7 +68,6 @@ class InputCollector:
                         required=True
                         if param.default is param.empty
                         else False,
->>>>>>> 041d11d (Ruff format)
                         # TODO: How define deprecated params?
                     )
                 )
@@ -233,13 +230,8 @@ class MethodsCollector:
         __rpc_method_tags__ = getattr(method, "__rpc_method_tags__", [])
 
         if __rpc_method_tags__:
-<<<<<<< HEAD
             openrpc_method.tags = [OpenRpcTag(name=tag) for tag in __rpc_method_tags__]
-=======
-            openrpc_method.tags = [
-                OpenRpcTag(name=tag) for tag in __rpc_method_tags__
-            ]
->>>>>>> 041d11d (Ruff format)
+
 
     def _collect_errors(self, method: Callable[..., Any]) -> None:
         return None

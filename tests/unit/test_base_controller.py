@@ -6,6 +6,7 @@ from jsonrpc_framework.controller.auth import AccessType
 
 
 
+
 def test_collect_declared_methods() -> None:
     """Test default method names collection."""
 

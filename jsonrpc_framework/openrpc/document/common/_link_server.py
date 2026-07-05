@@ -5,7 +5,7 @@ from pydantic import Field
 from jsonrpc_framework.openrpc.document._base import OpenRPCModel
 from jsonrpc_framework.openrpc.document.server._server import (
     OpenRpcServerObjectVariable,
-   _OpenRpcServerObjectVariableTD,
+    _OpenRpcServerObjectVariableTD,
 )
 
 __all__ = [

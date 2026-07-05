@@ -3,7 +3,6 @@ import logging
 from collections.abc import Callable
 from inspect import BoundArguments
 from typing import Any
-import logging
 
 from django.http import HttpRequest
 

@@ -6,10 +6,10 @@ from ._link_server import OpenRpcLinkObjectServer
 from ._pairing_object import OpenRpcExamplePairingObject
 from ._reference import OpenRpcReferenceObject
 from ._schema import (
-    OpenRpcSchema,
-    OpenRpcRefSchema,
-    OpenRpcDataSchema,
     OpenRcpTypeSchema,
+    OpenRpcDataSchema,
+    OpenRpcRefSchema,
+    OpenRpcSchema,
 )
 from ._tag import OpenRpcTag
 from ._utils import validate_type_name

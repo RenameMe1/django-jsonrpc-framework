@@ -62,6 +62,7 @@ def dispatcher() -> RpcDispatcher:
 
 
 
+
 async def async_method() -> str:
     return "Awaitable success"
 

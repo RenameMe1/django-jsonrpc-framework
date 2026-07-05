@@ -8,7 +8,6 @@ from jsonrpc_framework.openrpc.document._base import (
 )
 
 
-
 class OpenRpcLicense(OpenRPCModel):
     """
     License information for the exposed API.

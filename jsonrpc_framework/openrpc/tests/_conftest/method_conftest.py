@@ -18,7 +18,18 @@ from jsonrpc_framework.openrpc.document.server import (
     OpenRpcServerObjectVariable,
 )
 from jsonrpc_framework.openrpc.document.external_docs import OpenRpcExternalDoc
-from jsonrpc_framework.openrpc.document.common import OpenRcpTypeSchema
+from jsonrpc_framework.openrpc.document.info import (
+    OpenRpcContact,
+    OpenRpcLicense,
+)
+from jsonrpc_framework.openrpc.document.method._method import (
+    OpenRpcMethod,
+    _OpenRpcMethodTD,
+)
+from jsonrpc_framework.openrpc.document.server import (
+    OpenRpcServer,
+    OpenRpcServerObjectVariable,
+)
 
 from jsonrpc_framework.openrpc.builder.builder import OpenRpcBuilder
 from jsonrpc_framework.openrpc.document.common import (
