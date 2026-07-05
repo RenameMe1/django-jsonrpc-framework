@@ -1,15 +1,15 @@
 # Creating method
 
-We have a several way to create the jsonrpc method
+We have several ways to create JSON-RPC methods.
 
 ## Registering a method based on prefix
 
 
-The BaseController define all methods startwith `method_` as jsonrpc method,
-and registered its name without that prefix, see example below:
+`BaseController` defines all methods that start with `method_` as JSON-RPC methods,
+and registers their names without that prefix, see the example below:
 
 ```python
-from jsonrpc_framework import BaseConroller
+from jsonrpc_framework import BaseController
 
 
 class MyController(BaseController):
@@ -23,14 +23,14 @@ class MyController(BaseController):
         print(data)
 ```
 
-The MyController registered two JSONRPC methods `sync_example` & `async_example`, method `_send`
-doesn't registered as JSONRPC method and using as helpful func
+`MyController` registers two JSON-RPC methods: `sync_example` and `async_example`.
+The `_send` method is not registered as a JSON-RPC method and is used as a helper function.
 
 
-## Use decorator to registring methods
+## Using a decorator to register methods
 
-We also could use decorator to regitering methods, the decorator use current 
-method name to registered him, see example below:
+We can also use a decorator to register methods. The decorator uses the current
+method name to register it, see the example below:
 
 ``` python
 from jsonrpc_framework import BaseController, jsonrpc_method
@@ -39,23 +39,23 @@ class MyController(BaseController):
 
     @jsonrpc_method
     def sync_example(self) -> str:
-        return self._send("sync_example)
+        return self._send("sync_example")
     
     @jsonrpc_method
     async def async_example(self) -> str:
-        return self._send("sync_example)
+        return self._send("async_example")
 
-    def _send(self, data: str) -> None
+    def _send(self, data: str) -> None:
         print(data)
 
 ```
 
-Now, The MyConroller also have two JSONRPC method `sync_example` & `async_example`
+Now, `MyController` also has two JSON-RPC methods: `sync_example` and `async_example`.
 
 ## Rename method name
 
-The decorator `jsonrpc_method` also help you make special method name or just rename exist
-method
+The `jsonrpc_method` decorator also helps you set a custom method name or rename an existing
+method.
 
 
 ``` python
@@ -65,15 +65,15 @@ class MyController(BaseController):
 
     @jsonrpc_method("sync.send")
     def sync_example(self) -> str:
-        return self._send("sync_example)
+        return self._send("sync_example")
     
     @jsonrpc_method("async.send")
     async def async_example(self) -> str:
-        return self._send("sync_example)
+        return self._send("async_example")
 
-    def _send(self, data: str) -> None
+    def _send(self, data: str) -> None:
         print(data)
 
 ```
 
-In current state, MyController has two JSONRPC method named `sync.send` and `async.send`
+At this point, `MyController` has two JSON-RPC methods named `sync.send` and `async.send`.

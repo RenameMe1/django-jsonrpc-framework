@@ -1,6 +1,6 @@
 # Getting Started
 
-## Instalation 
+## Installation
 
 ```
 pip install django-jsonrpc
@@ -8,7 +8,7 @@ pip install django-jsonrpc
 
 ## Quickstart
 
-To quickstart we create a single page Django Application
+For a quick start, we create a single-file Django application.
 
 ``` python
 import secrets
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     execute_from_command_line(sys.argv)
 ```
 
-After create single file app, just run it
+After creating the single-file app, just run it.
 
 ```
 python single_file_asgi.py runserver

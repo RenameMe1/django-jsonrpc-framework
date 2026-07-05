@@ -1,6 +1,6 @@
 # Django jsonrpc implementation
 
-## install
+## Install
 
 ```
 pip install django-jsonrpc-framework
@@ -8,18 +8,18 @@ pip install django-jsonrpc-framework
 
 ## Advantages
 
-- Complete support jsonrpc 2.0 (Request, Notificatin, Batch)
-- Auto generation openrpc.json 1.3.2 version
-- Auto generation OpenRPC documentation (like swagger)
+- Complete support for JSON-RPC 2.0 (Request, Notification, Batch)
+- Auto-generation of `openrpc.json` (OpenRPC 1.3.2)
+- Auto-generation of OpenRPC documentation (like Swagger)
 - Async support
 
 ## Create methods
 
-We provide several methods creating methods. 
+We provide several ways to create methods.
 
 - Using `method_` prefix
 - Using `jsonrpc_method` decorator
-- Rename existing func to new name
+- Rename an existing function to a new name
 
 ``` python
 from jsonrpc_framework import BaseController
@@ -36,7 +36,7 @@ class EchoController(BaseController):
 
     @jsonrpc_method("echo_see_you")
     def wrong_name(self, name) -> str:
-        return "See you fron echo_see_you method"
+        return "See you from echo_see_you method"
 ```
 
 ## Adding several controllers to one controller
@@ -63,7 +63,7 @@ route = RouteController(
 )
 ```
 
-## Generation openrpc.json and OpenRpc documentation
+## Generating openrpc.json and OpenRPC documentation
 
 ``` python
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
@@ -81,10 +81,10 @@ urlpatterns = [
 ]
 ```
 
-### Openrpc.json example
+### OpenRPC.json example
 
 ![OpenRPC docs](docs/docs/openrpcjson.png)
 
-## Openrpc doc example
+## OpenRPC doc example
 
 ![OpenRPC docs](docs/docs/docs.png)

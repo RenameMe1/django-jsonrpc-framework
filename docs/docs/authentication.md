@@ -113,7 +113,7 @@ async def async_jwt_validator(token: BearerToken) -> bool:
 
 ```
 
-Next step is create an authentification backend.  We create both for learning purposes, you can create on of. A controller supports both backend types (sync and async) at the same time.
+The next step is to create an authentication backend. We create both for learning purposes; you can create one of them. A controller supports both backend types (sync and async) at the same time.
 
 
 ```python
@@ -151,7 +151,7 @@ After preparing authentication backends, we can use them in `BaseController`.
 
 > [!WARNING]
 > Access to a private method is granted if at least one of the specified auth_backends successfully authenticates the 
-request.
+> request.
 
 > [!NOTE]
 > Currently, there is no support for requiring approval from all specified auth_backends. Access to a private method is granted if at least one of the provided auth_backends successfully authenticates the request.
@@ -217,8 +217,8 @@ class MethodAccess(BaseController):
 
 Authorization setup looks similar to authentication setup.
 
-First, we create a helper's functions and instanses permissions backends, same
-the authentification backends created. We create both to learning purpose, you can create one of.
+First, we create helper functions and instantiate permission backends, similar to
+the authentication backends created above. We create both for learning purposes; you can create one of them.
 
 ``` python
 from pydantic import BaseModel

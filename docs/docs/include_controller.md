@@ -1,30 +1,30 @@
 # Include Controller
 
-Sometimes we have purpose separate different methods to different controllers and 
-use it in one JSONRPC endpoint, to solve this problem we could use `RouteController`, see example below
+Sometimes we need to separate methods into different controllers and
+use them in one JSON-RPC endpoint. To solve this problem, we can use `RouteController`, see the example below.
 
 ``` python
 
 from django-jsonrpc import BaseController
 
-class AccountController(BaseController)
+class AccountController(BaseController):
     
     def method_rename_account(self): ...
-    def method_delete_acoount(self): ...
+    def method_delete_account(self): ...
 ```
 
 ``` python
 
 from django-jsonrpc import RouteController, BaseController
 
-class ProductController(BaseController)
+class ProductController(BaseController):
 
     def method_order_product(self): ...
     def method_deliver_product(self): ...
     def method_pay_product(self): ...
 ```
 
-After that, we just add `route` to `urls.py`
+After that, we just add `route` to `urls.py`.
 
 ``` python
 from django.urls import path
@@ -47,4 +47,4 @@ urlpatterns = [
 ]
 ```
 
-After all, we have a one contoller has, one entrypoint to all controllers methods.
+As a result, we have one controller entry point for methods from multiple controllers.

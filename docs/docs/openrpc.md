@@ -1,11 +1,11 @@
 # OpenRpc
 
-Django-jsonrpc have a complete implementation of OpenRpc 1.3.2 specification using `Pydantic`.
+Django-jsonrpc has a complete implementation of the OpenRPC 1.3.2 specification using `Pydantic`.
 
 > [!WARNING]
-> But only a small part its connected with user API, see next table
+> But only a small part is connected with the user API, see the table below.
  
- | Part of documentation specification    | Implemenation Status | 
+ | Part of documentation specification    | Implementation Status | 
  | ---------------------------------------| -------------------- |
  | Info                                   | Full                 |
  | Servers                                | None                 |
@@ -16,7 +16,7 @@ Django-jsonrpc have a complete implementation of OpenRpc 1.3.2 specification usi
 
 ## How to enable
 
-The OpenRpc documentation work only if have openrpc json view, lets connect it first.
+The OpenRPC documentation works only if you have an OpenRPC JSON view. Let's connect it first.
 
 ``` python
 from jsonrpc_framework.controller.openrpc._openrpc import OpenRpcJsonView, OpenRpcDocView
@@ -30,11 +30,10 @@ urlpatterns = [
 ]
 ```
 
-The `OpenRpcCollector` create a json structure of your API, and provide it to your endpoint using the `OpenRpcJsonView`.
-Next the `
+The `OpenRpcCollector` creates a JSON structure of your API and provides it to your endpoint using `OpenRpcJsonView`.
 
-Next step, connecting the `OpenRpcDocView`, its using a `/openrpc.json` to 
-render your API visualization. Just add it below. 
+The next step is connecting `OpenRpcDocView`, which uses `/openrpc.json` to
+render your API visualization. Just add it below.
 
 ``` python
 urlpatterns = [
@@ -46,16 +45,16 @@ urlpatterns = [
 
 ### Pre-generation openrpc file
 
-For the purpose of improving startup performance, you have opportunity
-pre-generating your schema, to decrease the start time your application.
+To improve startup performance, you can pre-generate your schema
+to decrease your application's startup time.
 
-Just use command with your arguments
+Just use this command with your arguments.
 
 ```
 python manage.py generate_openrpc --collector myproject.openrpc.collector --output my_openrpc.json
 ```
 
-Next, set up file path setting
+Next, set up the file path setting.
 
 ```
 DJANGO_JSONRPC_DOCS: {
@@ -66,8 +65,8 @@ DJANGO_JSONRPC_DOCS: {
 
 ### Custom path to openrpc file
 
-If you have another endpoint to your `openrpc.json` file, you need change 
-`OpenRpcDocView` settings to your path 
+If you have another endpoint for your `openrpc.json` file, you need to change
+`OpenRpcDocView` settings to your path.
 
 ```
 DJANGO_JSONRPC_DOCS: {
@@ -77,9 +76,8 @@ DJANGO_JSONRPC_DOCS: {
 
 ## Info
 
-``` 
-While creating a OpenRpcCollector you have an opportunity to create `Info` about
-your project, see next.
+While creating an `OpenRpcCollector`, you can define `Info` about
+your project, see below.
 
 ``` python
 from jsonrpc_framework.controller.openrpc.collectors import OpenRpcCollector
@@ -101,8 +99,8 @@ collector = OpenRpcCollector(
 )
 ```
 
-After open the docs page, we see next result. If you have a long download,
-maybe you have problem with access to cdn, try to disable VPN or use
+After opening the docs page, you should see the result below. If loading takes too long,
+you may have a problem with CDN access, try disabling VPN or use
 self-hosted CDN files.
 
 ![OpenRPC docs](./docs.png)

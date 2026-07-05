@@ -1,14 +1,14 @@
 # Custom error
 
-You have an able to create your own error, or use exist in your code, see below example
+You can create your own error or use one that already exists in your code, see the example below.
 
 
 ``` python
 from jsonrpc_framework import BaseController
-from jsonrpc_framework.core import PrcError, InternalError
+from jsonrpc_framework.core import RpcError, InternalError
 
 
-class DoesntSupprotError(RpcError):
+class DoesntSupportError(RpcError):
     code: int = -4000
     message: str = "Doesn't support"
 
@@ -26,7 +26,7 @@ class MyController(BaseController):
         ...
 
         if flag:
-            return DoesntSupprotError()
+            return DoesntSupportError()
 
         ...
 ``` 
