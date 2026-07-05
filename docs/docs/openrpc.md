@@ -2,8 +2,8 @@
 
 Django-jsonrpc has a complete implementation of the OpenRPC 1.3.2 specification using `Pydantic`.
 
-> [!WARNING]
-> But only a small part is connected with the user API, see the table below.
+!!! warning
+    But only a small part is connected with the user API, see the table below.
  
  | Part of documentation specification    | Implementation Status | 
  | ---------------------------------------| -------------------- |

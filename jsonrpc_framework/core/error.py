@@ -46,7 +46,7 @@ class InvalidRequestExcError(Exception): ...
 
 class UnauthorizedError(RpcError):
     code: int = -32001
-    message: str = "Unauthorized"
+    message: str = "Unauthenticated"
 
 
 class ForbiddenError(RpcError):

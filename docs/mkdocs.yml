@@ -10,3 +10,8 @@ nav:
     - Custom error: custom_error.md
     - OpenRPC: openrpc.md
     - Streaming: streaming.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences

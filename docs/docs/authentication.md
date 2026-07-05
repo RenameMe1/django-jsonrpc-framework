@@ -10,9 +10,9 @@ Methods have three access levels:
 - **PRIVATE**: Ordinary private method, returns a result only if authentication and authorization checks are successful
 - **OPTIONAL**: Special level. If a request does not have credentials, the method behaves as PUBLIC (anonymous); if a request has credentials, the method behaves as PRIVATE
 
-> [!WARNING]
-> An OPTIONAL private level can expose your sensitive data. We created it for temporary use when you
-> need to make an existing method private without blocking front-end development.
+!!! warning
+    An OPTIONAL private level can expose your sensitive data. We created it for temporary use when you
+    need to make an existing method private without blocking front-end development.
 
 See below how to get access to different access levels.
 
@@ -24,7 +24,7 @@ See below how to get access to different access levels.
 
 ### Authentication & Authorization matrix
 
-All authentication errors return an Unauthorized error; see the example below.
+All authentication errors return an Unauthenticated error; see the example below.
 
 ```json
 {
@@ -32,7 +32,7 @@ All authentication errors return an Unauthorized error; see the example below.
   "id": 1,
   "error": {
     "code": -32001,
-    "message": "Unauthorized",
+    "message": "Unauthenticated",
     "data": "Method {__name__} is private and credentials are incorrect or not present"
   }
 }
@@ -149,16 +149,18 @@ After preparing authentication backends, we can use them in `BaseController`.
 
 ```
 
-> [!WARNING]
-> Access to a private method is granted if at least one of the specified auth_backends successfully authenticates the 
-> request.
+!!! warning
+    Access to a private method is granted if at least one of the specified auth_backends successfully authenticates the
+    request.
 
-> [!NOTE]
-> Currently, there is no support for requiring approval from all specified auth_backends. Access to a private method is granted if at least one of the provided auth_backends successfully authenticates the request.
+!!! note
+    Currently, there is no support for requiring approval from all specified auth_backends. Access to a private method
+    is granted if at least one of the provided auth_backends successfully authenticates the request.
 
-> [!WARNING]
-> Authentication checks follow the order of the structure you provide. If you use `list` or `tuple`, auth backends are executed from index `0` onward. If you use other `Sequence` structures, make sure you understand their element order.
-
+!!! warning
+    Authentication checks follow the order of the structure you provide. If you use `list` or `tuple`, auth backends
+    are executed from index `0` onward. If you use other `Sequence` structures, make sure you understand their element
+    order.
 
 The next step is to define an access level either at controller level or at method level.
 
@@ -391,9 +393,9 @@ class AsyncBaseAuthentication(Protocol):
 
 ```
 
-> [!WARNING]
-> Be careful when implementing `has_credentials`: if you use OPTIONAL access level,
-> a mistake inside this method can open anonymous access to a method.
+!!! warning
+    Be careful when implementing `has_credentials`: if you use OPTIONAL access level,
+    a mistake inside this method can open anonymous access to a method.
 
 Permission backends look like this:
 
@@ -430,5 +432,6 @@ class AsyncBasePermission(Protocol):
 ```
 
 
-> [!WARNING]
-> Suppress all expected exceptions in backends to return `False`. The runner does not treat backend exceptions as `False` results.
+!!! warning
+    Suppress all expected exceptions in backends to return `False`. The runner does not treat backend exceptions as
+    `False` results.
