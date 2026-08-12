@@ -10,6 +10,8 @@ nav:
     - Custom error: custom_error.md
     - OpenRPC: openrpc.md
     - Streaming: streaming.md
+  - Integrations:
+    - Sentry: Integrations/sentry.md
 
 markdown_extensions:
   - admonition

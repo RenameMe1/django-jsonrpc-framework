@@ -16,9 +16,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-jwt = [
-    "pyjwt>=2.13.0",
-]
+jwt = ["pyjwt>=2.13.0"]
+sentry = ["sentry-sdk>=2.0"]
 
 [dependency-groups]
 dev = [

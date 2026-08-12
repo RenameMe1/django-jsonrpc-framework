@@ -1,3 +1,4 @@
+import os
 import secrets
 import sys
 from typing import TypedDict
@@ -19,6 +20,24 @@ from jsonrpc_framework.openrpc.document.info import (
     OpenRpcLicense,
 )
 
+if dsn := os.environ.get("SENTRY_DSN"):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    from jsonrpc_framework.integration.sentry import JsonRpcIntegration
+
+    sentry_sdk.init(
+        dsn=dsn,
+        integrations=[
+            DjangoIntegration(),
+            JsonRpcIntegration(),
+        ],
+        traces_sample_rate=float(
+            os.environ.get("SENTRY_TRACES_SAMPLE_RATE", "1.0")
+        ),
+        send_default_pii=False,
+    )
+
 
 class CustomError(RpcError):
     code: int = -4000
@@ -31,7 +50,7 @@ if not settings.configured:
         ALLOWED_HOSTS="*",
         DEBUG=True,
         INSTALLED_APPS=[
-            "django_jsonrpc",
+            "jsonrpc_framework",
             "django.contrib.staticfiles",
         ],
         STATIC_URL="/static/",
