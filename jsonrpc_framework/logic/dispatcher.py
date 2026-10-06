@@ -7,7 +7,6 @@ from typing import Any
 from django.http import HttpRequest
 
 from jsonrpc_framework.core.models import MethodType, ParamType
-from jsonrpc_framework.logic.validator import RequestType, BatchType
 from jsonrpc_framework.core.error import (
     RpcError,
     InternalError,

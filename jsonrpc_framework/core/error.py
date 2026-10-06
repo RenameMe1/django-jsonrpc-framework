@@ -3,6 +3,8 @@ from typing import Any
 from pydantic import BaseModel
 
 
+__all__ = ["RpcError", "ParseError", "InvalidRequestError", "MethodNotFoundError", "InvalidParamsError", "InternalError", "ParseExcError", "InvalidRequestExcError", "UnauthorizedError", "ForbiddenError"]
+
 class RpcError(BaseModel):
     code: int
     message: str
