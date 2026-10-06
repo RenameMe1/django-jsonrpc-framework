@@ -5,12 +5,16 @@ from typing import Any
 import inspect
 
 import sentry_sdk
-from sentry_sdk.integrations import DidNotEnable, Integration
-from sentry_sdk.utils import capture_internal_exceptions, ensure_integration_enabled
+from sentry_sdk.integrations import Integration
+from sentry_sdk.utils import (
+    capture_internal_exceptions,
+    ensure_integration_enabled,
+)
 
 from jsonrpc_framework.logic.dispatcher import RpcDispatcher
 
 logger = logging.getLogger("django.server")
+
 
 class JsonRpcIntegration(Integration):
     identifier = "jsonrpc"
@@ -34,7 +38,7 @@ class JsonRpcIntegration(Integration):
 
 
 def _patch_dispatch_single(RpcDispatcher: type) -> None:
-    old = RpcDispatcher._dispatch_single
+    old = getattr(RpcDispatcher, "_dispatch_single")
 
     @ensure_integration_enabled(JsonRpcIntegration, old)
     async def patched(
@@ -43,7 +47,9 @@ def _patch_dispatch_single(RpcDispatcher: type) -> None:
         registry: Any,
         http_request: Any,
     ) -> Any:
-        integration = sentry_sdk.get_client().get_integration(JsonRpcIntegration)
+        integration = sentry_sdk.get_client().get_integration(
+            JsonRpcIntegration
+        )
         method = request.method
         scope = sentry_sdk.get_current_scope()
 
@@ -65,11 +71,12 @@ def _patch_dispatch_single(RpcDispatcher: type) -> None:
         ):
             return await old(self, request, registry, http_request)
 
-    RpcDispatcher._dispatch_single = patched 
+    setattr(RpcDispatcher, "_dispatch_single", patched)
 
 
 def _patch_call_handler(RpcDispatcher: type) -> None:
-    old = RpcDispatcher._call_handler
+    old = getattr(RpcDispatcher, "_call_handler")
+
     @ensure_integration_enabled(JsonRpcIntegration, old)
     async def patched(
         self: Any,
@@ -96,7 +103,9 @@ def _patch_call_handler(RpcDispatcher: type) -> None:
                 result = await result
             return result
         except Exception as exc:
-            integration = sentry_sdk.get_client().get_integration(JsonRpcIntegration)
+            integration = sentry_sdk.get_client().get_integration(
+                JsonRpcIntegration
+            )
             if integration and integration.capture_internal_errors:
                 with capture_internal_exceptions():
                     sentry_sdk.capture_exception(
@@ -110,6 +119,7 @@ def _patch_call_handler(RpcDispatcher: type) -> None:
                     )
             logger.exception(exc)
             from jsonrpc_framework.core.error import InternalError
+
             return InternalError()
 
-    RpcDispatcher._call_handler = patched_call_handler
+    setattr(RpcDispatcher, "_call_handler", patched_call_handler)

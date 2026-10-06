@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-pip install django-jsonrpc
+pip install django-jsonrpc-framework
 ```
 
 ## Quickstart

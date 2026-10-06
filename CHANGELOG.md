@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-10-06
+
+### Added
+
+- Added optional Prometheus metrics integration in `jsonrpc_framework/integration/`.
+- Added Prometheus documentation in `docs/docs/integrations/prometheus.md`.
+- Added optional dependency extra `prometheus` in `pyproject.toml`.
+
 ## [0.2.0] - 2026-07-05
 
 ### Added
@@ -37,4 +45,3 @@ and this project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 - Fixed issues in `urlpatterns` and `return` statements in early patches.
-

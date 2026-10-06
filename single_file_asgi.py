@@ -19,6 +19,10 @@ from jsonrpc_framework.openrpc.document.info import (
     OpenRpcContact,
     OpenRpcLicense,
 )
+from jsonrpc_framework.integration.prometheus import (
+    enable_prometheus,
+    MetricsView,
+)
 
 if dsn := os.environ.get("SENTRY_DSN"):
     import sentry_sdk
@@ -37,6 +41,9 @@ if dsn := os.environ.get("SENTRY_DSN"):
         ),
         send_default_pii=False,
     )
+
+
+enable_prometheus()
 
 
 class CustomError(RpcError):
@@ -105,7 +112,11 @@ class EchoController(BaseController):
         description="Printing description",
         tags=["test", "test2"],
     )
-    def printing(self, name: str, count: int = 0) -> str:
+    def printing(self, name: str, count: int = 0) -> str | CustomError:
+
+        if count > 10:
+            return CustomError(data="Custom error")
+
         return f"Printing {name} {count} times"
 
     @jsonrpc_method
@@ -141,8 +152,9 @@ collector = OpenRpcCollector(
 
 urlpatterns = [
     path("jsonrpc", EchoController.as_view()),
+    path("jsonrpc/docs", OpenRpcDocView.as_view()),
     path("openrpc.json", OpenRpcJsonView.as_view(collector=collector)),
-    path("docs", OpenRpcDocView.as_view()),
+    path("metrics", MetricsView.as_view()),
 ]
 
 if __name__ == "__main__":

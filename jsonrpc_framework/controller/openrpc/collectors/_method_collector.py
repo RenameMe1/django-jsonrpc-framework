@@ -19,17 +19,6 @@ from jsonrpc_framework.openrpc.document.common import (
 )
 
 from jsonrpc_framework.core.error import RpcError
-from jsonrpc_framework.openrpc.document.common import (
-    OpenRcpContentDescriptorObject,
-    OpenRcpTypeSchema,
-    OpenRpcDataSchema,
-    OpenRpcErrorObject,
-    OpenRpcRefSchema,
-    OpenRpcTag,
-    validate_type_name,
-)
-from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
-from jsonrpc_framework.openrpc.document.method._method import OpenRpcMethod
 
 
 class ExampleCollector: ...

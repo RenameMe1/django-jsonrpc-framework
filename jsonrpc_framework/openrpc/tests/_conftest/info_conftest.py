@@ -7,13 +7,6 @@ from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
 
 import pytest
 
-from jsonrpc_framework.openrpc.document.info import (
-    OpenRpcContact,
-    OpenRpcInfo,
-    OpenRpcLicense,
-)
-from jsonrpc_framework.openrpc.document.info._info import _OpenRpcInfoTD
-
 
 @pytest.fixture
 def openrpc_info() -> OpenRpcInfo:

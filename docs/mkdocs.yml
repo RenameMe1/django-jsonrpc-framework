@@ -11,9 +11,13 @@ nav:
     - OpenRPC: openrpc.md
     - Streaming: streaming.md
   - Integrations:
-    - Sentry: Integrations/sentry.md
+    - Sentry: integrations/sentry.md
+    - Prometheus: integrations/prometheus.md
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: ["."]
+      check_paths: true

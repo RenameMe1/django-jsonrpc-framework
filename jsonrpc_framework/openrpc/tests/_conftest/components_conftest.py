@@ -14,16 +14,6 @@ from jsonrpc_framework.openrpc.document.components import OpenRpcComponents
 from jsonrpc_framework.openrpc.document.components._components import (
     _OpenRpcComponentsTD,
 )
-from jsonrpc_framework.openrpc.document.common import (
-    OpenRpcLinkObject,
-    OpenRpcErrorObject,
-    OpenRpcExamplePairingObject,
-    OpenRcpContentDescriptorObject,
-    OpenRpcTag,
-    OpenRpcDataSchema,
-    OpenRpcExampleObject,
-)
-from jsonrpc_framework.openrpc.document.common import OpenRcpTypeSchema
 
 
 @pytest.fixture
