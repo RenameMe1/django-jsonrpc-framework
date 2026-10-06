@@ -28,16 +28,15 @@ except ImportError:
 if TYPE_CHECKING:
     from django.http import HttpRequest
 
-    from jsonrpc_framework.logic.validator import RequestType
+    from jsonrpc_framework.logic.validator import BatchType, RequestType
     from jsonrpc_framework.core.models import MethodType
     from jsonrpc_framework.logic.dispatcher import (
-        HandlerType, ResponseType
+        BatchResponseType,
+        HandlerType,
+        ResponseType,
     )
-    from jsonrpc_framework.core.models import ErrorResponse
-    from jsonrpc_framework.core.error import RpcError
-    from logic.validator import BatchType, BatchResponseType
 
-__all__ = ['enable_prometheus', 'reset_prometheus', 'MetricsView']
+__all__ = ["enable_prometheus", "reset_prometheus", "MetricsView"]
 
 
 _enabled: bool = False
@@ -93,14 +92,15 @@ def enable_prometheus(*, registry: CollectorRegistry | None = None) -> None:
     )
     _enabled = True
 
+
 def reset_prometheus() -> None:
     global _enabled, _registry
     global _original_dispatch_single, _original_dispatch
 
     if _original_dispatch_single is not None:
-        RpcDispatcher._dispatch_single = _original_dispatch_single
+        setattr(RpcDispatcher, "_dispatch_single", _original_dispatch_single)
     if _original_dispatch is not None:
-        RpcDispatcher.dispatch = _original_dispatch
+        setattr(RpcDispatcher, "dispatch", _original_dispatch)
 
     _original_dispatch_single = None
     _original_dispatch = None
@@ -118,7 +118,7 @@ def _patch_dispatch_single(
     old = dispatcher._dispatch_single
 
     async def patched(
-        self,
+        self: RpcDispatcher,
         request: RequestType,
         registry: dict[MethodType, HandlerType],
         http_request: HttpRequest,
@@ -147,7 +147,7 @@ def _patch_dispatch_single(
 
         return result
 
-    dispatcher._dispatch_single = patched
+    setattr(dispatcher, "_dispatch_single", patched)
 
 
 def _patch_dispatch(
@@ -160,7 +160,7 @@ def _patch_dispatch(
     old = dispatcher.dispatch
 
     async def patched(
-        self,
+        self: RpcDispatcher,
         body: RequestType | BatchType | RpcError,
         registry: dict[MethodType, HandlerType],
         http_request: HttpRequest,
@@ -183,7 +183,7 @@ def _patch_dispatch(
 
         return result
 
-    dispatcher.dispatch = patched
+    setattr(dispatcher, "dispatch", patched)
 
 
 def _observe_outcome(

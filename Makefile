@@ -1,5 +1,7 @@
-mypy:
+lint:
 	uv run mypy .
+	uv run ruff check . --fix
+	uv run ruff format .
 
 test:
 	uv run pytest tests -s -vv

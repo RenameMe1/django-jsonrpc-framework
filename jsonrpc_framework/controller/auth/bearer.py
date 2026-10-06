@@ -1,6 +1,5 @@
-from typing import Generic, TypeVar, Any, ClassVar, Protocol
+from typing import Generic, TypeVar, Protocol
 
-from jwt import algorithms
 from pydantic import BaseModel, ValidationError
 
 from jsonrpc_framework.controller.auth import AuthResult, INVALID_AUTH

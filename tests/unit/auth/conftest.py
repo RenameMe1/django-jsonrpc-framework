@@ -1,5 +1,4 @@
 import pytest
-from typing import Any
 import time
 import secrets
 from typing import TypeVar
