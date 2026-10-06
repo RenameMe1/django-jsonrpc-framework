@@ -27,6 +27,6 @@ jobs:
           python-version: "3.13"
       - uses: astral-sh/setup-uv@v3
       - uses: actions/checkout@v4
-      - run: uv sync --all-extras --group dev --group docss
+      - run: uv sync --all-extras --group dev --group docs
       - run: make lint
 
