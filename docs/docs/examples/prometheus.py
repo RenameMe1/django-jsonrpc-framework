@@ -11,6 +11,7 @@ from jsonrpc_framework.integration.prometheus import (
     MetricsView,
     enable_prometheus,
 )
+from jsonrpc_framework.core.error import InternalError
 
 enable_prometheus()
 
@@ -31,6 +32,10 @@ class EchoController(BaseController):
     @jsonrpc_method
     def echo(self, name: str) -> str:
         return f"Echo {name}"
+
+    @jsonrpc_method
+    def error(self) -> str:
+        return InternalError(data="Internal error")
 
 
 urlpatterns = [
